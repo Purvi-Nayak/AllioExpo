@@ -8,7 +8,6 @@
     "scheme": "allioexpo",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-     
     "ios": {
       "supportsTablet": true
     },
@@ -17,9 +16,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.purvin_itpath.AllioExpo"
     },
- 
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -31,14 +30,20 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "imageWidth": 500,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": " #FFCE1B"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "fd9dbaab-16ee-479d-b073-58043cf1b690"
+      }
     }
   }
 }
