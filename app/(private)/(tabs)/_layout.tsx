@@ -1,4 +1,4 @@
-import { IconSymbol } from "@/components/ui/IconSymbol";
+import { IconSymbol, type IconSymbolName } from "@/components/ui/IconSymbol";
 import { useTheme } from "@/constants/Colors";
 
 import { Tabs } from "expo-router";
@@ -6,6 +6,16 @@ import { Platform } from "react-native";
 
 export default function TabLayout() {
   const theme = useTheme();
+  const TabBarIcon = ({
+    name,
+    color,
+  }: {
+    name: IconSymbolName;
+    color: string;
+  }) => {
+    return <IconSymbol size={28} name={name} color={color} />;
+  };
+
   return (
     <Tabs
       screenOptions={{
@@ -23,7 +33,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+            <TabBarIcon name="house.fill" color={color} />
           ),
         }}
       />
@@ -32,7 +42,7 @@ export default function TabLayout() {
         options={{
           title: "Scanner",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="qrcode" color={color} />
+            <TabBarIcon  name="qrcode" color={color} />
           ),
         }}
       />
@@ -41,7 +51,7 @@ export default function TabLayout() {
         options={{
           title: "Media",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="photo.fill" color={color} />
+            <TabBarIcon  name="photo.fill" color={color} />
           ),
         }}
       />
@@ -50,7 +60,7 @@ export default function TabLayout() {
         options={{
           title: "Chat",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="message.fill" color={color} />
+            <TabBarIcon  name="message.fill" color={color} />
           ),
         }}
       />
@@ -59,7 +69,7 @@ export default function TabLayout() {
         options={{
           title: "Settings",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="gearshape.fill" color={color} />
+            <TabBarIcon  name="gearshape.fill" color={color} />
           ),
         }}
       />
