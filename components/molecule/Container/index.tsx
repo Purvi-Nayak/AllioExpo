@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from '@/constants/Colors';
 import React, { memo } from 'react';
 import {
   KeyboardAvoidingView,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
   ViewStyle,
+  useColorScheme,
 } from 'react-native';
 import { CustomHeader, CustomLoader, CustomStatusBar } from '../../index';
 import useStyle from './style';
@@ -42,16 +43,18 @@ const Container: React.FC<PageLayoutProps> = ({
   showBackArrow = false,
   title = '',
 }) => {
-  const { colors, dark } = useTheme();
+  const theme = useTheme();
+  const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
   const styles = useStyle();
 
   return (
-    <View style={[styles.flex, { backgroundColor: colors.background }]}>
+    <View style={[styles.flex, { backgroundColor: theme.background }] }>
       <CustomStatusBar
         backgroundColor={
-          statusBarColor ?? (auth ? colors.background : colors.primary)
+          statusBarColor ?? (auth ? theme.background : theme.primary)
         }
-        barStyle={auth && dark ? 'light-content' : 'dark-content'}
+        barStyle={auth && isDark ? 'light-content' : 'dark-content'}
       />
       {showHeader && (
         <CustomHeader

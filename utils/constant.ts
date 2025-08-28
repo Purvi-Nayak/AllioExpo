@@ -60,29 +60,36 @@ const onboardingData: OnboardingItem[] = [
 const LICENSE_KEY =
   'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
 
-const FeaturesDataItem = [
-  {
-    image: IMAGES.Notification,
-    title: 'features.scanQR.title',
-    description: 'features.scanQR.description',
-    buttonText: 'features.scanQR.button',
-  },
-  {
-    image: IMAGES.Notification,
-    title: 'features.videoEditing.title',
-    description: 'features.videoEditing.description',
-    buttonText: 'features.videoEditing.button',
-  },
-  {
-    image: IMAGES.Notification,
-    title: 'features.photoEditing.title',
-    description: 'features.photoEditing.description',
-    buttonText: 'features.photoEditing.button',
-  },
-];
+  const FeaturesDataItem = [
+    {
+      image: IMAGES.Notification,
+      title: ' ScanQR',
+      description: 'Scan documents quickly and save them securely.',
+      buttonText: 'ScanQR',
+    },
+    {
+      image: IMAGES.Notification,
+      title: 'Video Editing',
+      description: 'Stay updated with instant alerts and reminders.',
+      buttonText: 'Video Editing',
+    },
+    {
+      image: IMAGES.Notification,
+      title: 'Photo Editing',
+      description: 'Scan QR codes and barcodes with ease.',
+      buttonText: 'Photo Editing',
+    },
+  
+    {
+      image: IMAGES.Notification,
+      title: 'Home',
+      description: 'Fast and reliable scanning for all your needs.',
+      buttonText: 'Home',
+    },
+  ];
 
 export {
-    BASE_URL, CARD_WIDTH, FeaturesDataItem,
-    LICENSE_KEY, onboardingData, SPACING, WEB_CLIENT_ID
+  BASE_URL, CARD_WIDTH, FeaturesDataItem,
+  LICENSE_KEY, onboardingData, SPACING, WEB_CLIENT_ID
 };
 

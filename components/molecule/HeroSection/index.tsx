@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
-import { ImageBackground, View } from 'react-native';
+import { View, ImageBackground } from 'react-native';
 import Animated, {
-  Easing,
-  useAnimatedStyle,
   useSharedValue,
+  useAnimatedStyle,
   withTiming,
+  Easing,
 } from 'react-native-reanimated';
-import { IMAGES } from '../../../assets';
-import { Text } from '../../index';
+import Text from '@components/atoms/Text';
+import { IMAGES } from '@assets/index';
 import useStyle from './style';
 
 interface Props {
@@ -53,13 +53,11 @@ export default function HeroSection({ description }: Props) {
       <View style={styles.overlay} />
       <Animated.View style={[titleStyle]}>
         <Text type="bold" style={styles.title}>
-          {'HeroSection.titleone'}
+          Welcome to ALLIO
         </Text>
       </Animated.View>
       <Animated.View style={[descStyle]}>
-        <Text type="regular" style={styles.description}>
-          {'HeroSection.description'}
-        </Text>
+        <Text style={styles.description}>{description}</Text>
       </Animated.View>
       <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
 

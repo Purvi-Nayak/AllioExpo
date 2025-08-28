@@ -1,10 +1,11 @@
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from '@/constants/Colors';
+import { height, width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { height, width } from '../../../utils/helper';
+
 
 const useStyle = () => {
-  const { colors } = useTheme();
+  const  colors  = useTheme();
   return StyleSheet.create({
     card: {
       justifyContent: 'center',

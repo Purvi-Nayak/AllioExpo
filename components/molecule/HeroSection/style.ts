@@ -23,14 +23,14 @@ export default function useStyle() {
     },
     title: {
       marginBottom: scale(10),
-      fontSize: scale(28),
+      fontSize: scale(38),
       color: colors.white,
       textAlign: 'center',
     },
 
     description: {
-      fontSize: scale(18),
-      color: colors.text,
+      fontSize: scale(20),
+      color: colors.white,
       textAlign: 'center',
       lineHeight: scale(22),
     },

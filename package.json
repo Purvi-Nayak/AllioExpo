@@ -29,6 +29,7 @@
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.11",
     "expo-web-browser": "~14.2.0",
+    "formik": "^2.4.6",
     "install": "^0.13.0",
     "npx": "^10.2.2",
     "react": "19.0.0",
@@ -41,7 +42,8 @@
     "react-native-screens": "~4.11.1",
     "react-native-size-matters": "^0.4.2",
     "react-native-web": "~0.20.0",
-    "react-native-webview": "13.13.5"
+    "react-native-webview": "13.13.5",
+    "yup": "^1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

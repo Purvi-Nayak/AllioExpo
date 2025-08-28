@@ -1,10 +1,10 @@
+import { useTheme } from '@/constants/Colors';
+import { height, width } from '@utils/helper';
 import { StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { width, height } from '@utils/helper';
-import { useTheme } from '@react-navigation/native';
 
 const useStyle = () => {
-  const { colors } = useTheme();
+  const  colors  = useTheme();
 
   return StyleSheet.create({
     headerContainer: {

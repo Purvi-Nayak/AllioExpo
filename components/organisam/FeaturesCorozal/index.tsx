@@ -1,17 +1,11 @@
+import FeatureCard from '@/components/cards/FeatureCard';
 import Text from '@components/atoms/Text';
-import FeatureCard from '@components/cards/FeatureCard';
-import { CARD_WIDTH } from '@utils/constant';
 import React, { useRef } from 'react';
 import { Dimensions, View } from 'react-native';
 import type { ICarouselInstance } from 'react-native-reanimated-carousel';
 import Carousel from 'react-native-reanimated-carousel';
+import type { FeatureDataItem } from './style';
 import useStyle from './style';
-type FeatureDataItem = {
-  image: any;
-  title: string;
-  description: string;
-  buttonText: string;
-};
 const windowWidth = Dimensions.get('window').width;
 
 interface FeaturesCarouselProps {
@@ -23,13 +17,12 @@ export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
   data,
   onPress,
 }) => {
-  const styles = useStyle();
-  // Adjust card width as needed
+  const { CARD_WIDTH, styles } = useStyle();
   const carouselRef = useRef<ICarouselInstance>(null);
 
   return (
     <>
-      <Text style={styles.textone}>{'FeaturesCarousel.title'}</Text>
+      <Text style={styles.textone}>Features of ALLIO</Text>
 
       <Carousel
         ref={carouselRef}
@@ -44,10 +37,10 @@ export const FeaturesCarousel: React.FC<FeaturesCarouselProps> = ({
           moveSize: CARD_WIDTH,
           snapDirection: 'left',
         }}
-        onConfigurePanGesture={(gesture: any) => {
+        onConfigurePanGesture={gesture => {
           gesture.enabled(false);
         }}
-        renderItem={({ item }: { item: FeatureDataItem }) => (
+        renderItem={({ item }) => (
           <View style={{ width: CARD_WIDTH }}>
             <FeatureCard
               image={item.image}

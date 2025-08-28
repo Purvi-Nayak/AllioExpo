@@ -1,6 +1,7 @@
-import React, { memo } from 'react';
-import { Image, View } from 'react-native';
-import { Button, Text } from '../../index';
+import React from 'react';
+import { View, Image } from 'react-native';
+import Text from '@components/atoms/Text';
+import Button from '@components/atoms/Button';
 import useStyle from './style';
 interface FeatureCardProps {
   image: any;
@@ -28,4 +29,4 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   );
 };
 
-export default memo(FeatureCard);
+export default FeatureCard;

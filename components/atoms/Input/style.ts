@@ -55,6 +55,11 @@ const useStyle = () => {
       height: scale(20),
       tintColor: colors.gray,
     },
+    errorContainer: {
+      minHeight: scale(10),
+      justifyContent: "flex-start",
+      marginLeft: scale(4),
+    },
     errorText: {
       fontSize: scale(12),
       color: colors.error,

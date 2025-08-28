@@ -125,11 +125,11 @@
 import { useTheme } from "@/constants/Colors"; // Use your custom hook
 import React, { useState } from "react";
 import {
-  Image,
-  KeyboardTypeOptions,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Image,
+    KeyboardTypeOptions,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { ICONS } from "../../../assets";
 import Text from "../Text";
@@ -235,7 +235,11 @@ const Input: React.FC<InputProps> = ({
         )}
       </View>
 
-      {hasError && <Text style={[styles.errorText, errorStyle]}>{error}</Text>}
+      <View style={styles.errorContainer}>
+        {hasError ? (
+          <Text style={[styles.errorText, errorStyle]}>{error}</Text>
+        ) : null}
+      </View>
 
       {maxLength && value && (
         <Text style={styles.counterText}>

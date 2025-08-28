@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../../../context/AuthContext";
-import useStyle from "./style";
+import useStyle from "./styles";
 
 function SettingsScreen() {
   const { logout } = useAuth();

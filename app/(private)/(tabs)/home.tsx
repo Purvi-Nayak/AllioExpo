@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 
+import ContactUsSection from '@/components/organisam/ContactUsSection';
 import { IMAGES } from '@assets/index';
 import { AboutDetails, Container, ImageSlider } from '@components/index';
 import { FeaturesCarousel } from '@components/organisam/FeaturesCorozal';
@@ -46,13 +47,14 @@ const HomeScreen: React.FC = () => {
   return (
     <Container
       onProfilePress={handleProfilePress}
-      title="Home.Home"
+      title="Home"
       showAppLogo
       showProfileLogo
       keyboardAvoiding>
       <AboutDetails />
       <ImageSlider images={promoImages} />
       <FeaturesCarousel data={FeaturesDataItem} onPress={handleFeaturePress} />
+      <ContactUsSection />
     </Container>
   );
 };
