@@ -125,11 +125,11 @@
 import { useTheme } from "@/constants/Colors"; // Use your custom hook
 import React, { useState } from "react";
 import {
-    Image,
-    KeyboardTypeOptions,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Image,
+  KeyboardTypeOptions,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ICONS } from "../../../assets";
 import Text from "../Text";
