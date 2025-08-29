@@ -1,6 +1,6 @@
+import { useTheme } from '@react-navigation/native';
 import { Dimensions, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-import { useTheme } from '@react-navigation/native';
 
 const { width: W, height: H } = Dimensions.get('window');
 
@@ -23,7 +23,7 @@ export default function useStyle() {
     },
     title: {
       marginBottom: scale(10),
-      fontSize: scale(38),
+      fontSize: scale(28),
       color: colors.white,
       textAlign: 'center',
     },

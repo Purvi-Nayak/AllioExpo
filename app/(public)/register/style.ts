@@ -67,7 +67,7 @@ const useStyle = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      padding: 20,
+   
       justifyContent: "center",
       backgroundColor: "#fff",
     },
@@ -87,7 +87,7 @@ const useStyle = () => {
       borderWidth: 1,
       borderColor: "#ddd",
       padding: 15,
-      marginBottom: 15,
+     
       borderRadius: 8,
       fontSize: 16,
     },
