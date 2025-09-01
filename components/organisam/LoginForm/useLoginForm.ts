@@ -111,3 +111,196 @@
 //     navigateToRegister,
 //   };
 // };
+// import { setStateKey } from "@/redux/slices/AuthSlice";
+// import { checkUserExistsByEmail } from "@/utils/helper";
+// import useValidation from "@/utils/velidationSchema";
+// import {
+//   getAuth,
+//   signInWithEmailAndPassword,
+// } from "@react-native-firebase/auth";
+// import firestore from "@react-native-firebase/firestore";
+// import { useRouter } from "expo-router";
+// import { useState } from "react";
+// import { Alert } from "react-native";
+// import { useDispatch } from "react-redux";
+
+// export const useLoginForm = () => {
+//   const [remember, setRemember] = useState<boolean>(false);
+//   const [loading, setLoading] = useState<boolean>(false);
+//   const dispatch = useDispatch();
+//   const router = useRouter();
+//   const { loginValidationSchema } = useValidation();
+
+//   const initialValues = {
+//     email: "",
+//     password: "",
+//   };
+
+//   const handleLogin = async (values: typeof initialValues) => {
+//     setLoading(true);
+
+//     try {
+//       const email = values.email.trim().toLowerCase();
+//       const password = values.password.trim();
+
+//       const exists = await checkUserExistsByEmail(email);
+//       if (!exists) {
+//         Alert.alert("User does not exist!");
+//         return;
+//       }
+
+//       const userCredential = await signInWithEmailAndPassword(
+//         getAuth(),
+//         email,
+//         password
+//       );
+
+//       const user = userCredential.user;
+
+//       if (user) {
+//         const idToken = await user.getIdToken();
+//         dispatch(setStateKey({ key: "token", value: idToken }));
+
+//         const userDocRef = firestore().collection("users").doc(user.uid);
+//         const userDoc = await userDocRef.get();
+//         const userData = userDoc.data();
+
+//         // Store only essential user data
+//         const essentialUserData = {
+//           email: userData?.email || email,
+//           firstName: userData?.firstName || "",
+//           lastName: userData?.lastName || "",
+//           mobileNo: userData?.mobileNo || "",
+//           profileImage: userData?.profileImage || "",
+//         };
+
+//         dispatch(setStateKey({ key: "userData", value: essentialUserData }));
+//         Alert.alert("Login Successful!");
+
+//         // Navigate to home screen using Expo Router
+//         router.replace("/(private)/(tabs)/home");
+//       }
+//     } catch (error) {
+//       console.error("Error into handleLogin :- ", error);
+//       Alert.alert(
+//         (error as any)?.response?.data?.message ||
+//           "Login failed. Please try again."
+//       );
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const navigateToRegister = () => {
+//     router.push("/(public)/register");
+//   };
+
+//   const navigateToForgotPassword = () => {
+//     router.push("/(public)/forgetpassword");
+//   };
+
+//   return {
+//     remember,
+//     setRemember: () => setRemember((prev) => !prev),
+//     loading,
+//     handleLogin,
+//     initialValues,
+//     loginValidationSchema,
+//     navigateToRegister,
+//     navigateToForgotPassword,
+//   };
+// };
+import { setStateKey } from "@/redux/slices/AuthSlice";
+import { checkUserExistsByEmail } from "@/utils/helper";
+import useValidation from "@/utils/velidationSchema";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+} from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert } from "react-native";
+import { useDispatch } from "react-redux";
+
+export const useLoginForm = () => {
+  const [remember, setRemember] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { loginValidationSchema } = useValidation();
+
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const handleLogin = async (values: typeof initialValues) => {
+    setLoading(true);
+
+    try {
+      const email = values.email.trim().toLowerCase();
+      const password = values.password.trim();
+
+      const exists = await checkUserExistsByEmail(email);
+      if (!exists) {
+        Alert.alert("User does not exist!");
+        return;
+      }
+
+      const userCredential = await signInWithEmailAndPassword(
+        getAuth(),
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      if (user) {
+        const idToken = await user.getIdToken();
+        dispatch(setStateKey({ key: "token", value: idToken }));
+
+        const userDocRef = firestore().collection("users").doc(user.uid);
+        const userDoc = await userDocRef.get();
+        const userData = userDoc.data();
+
+        const essentialUserData = {
+          email: userData?.email || email,
+          firstName: userData?.firstName || "",
+          lastName: userData?.lastName || "",
+          mobileNo: userData?.mobileNo || "",
+          profileImage: userData?.profileImage || "",
+        };
+
+        dispatch(setStateKey({ key: "userData", value: essentialUserData }));
+        Alert.alert("Login Successful!");
+
+        router.replace("/(private)/(tabs)/home");
+      }
+    } catch (error) {
+      console.error("Error into handleLogin :- ", error);
+      Alert.alert("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const navigateToRegister = () => {
+    router.push("/(public)/register");
+  };
+
+  const navigateToForgotPassword = () => {
+    router.push("/(public)/forgetpassword");
+  };
+
+  return {
+    remember,
+    setRemember: () => setRemember((prev) => !prev),
+    loading,
+    handleLogin,
+    initialValues,
+    loginValidationSchema,
+    navigateToRegister,
+    navigateToForgotPassword,
+  };
+};

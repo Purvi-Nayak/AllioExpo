@@ -132,3 +132,135 @@
 // };
 
 // export default useRegister;
+import { setStateKey } from "@/redux/slices/AuthSlice";
+import useValidation from "@/utils/velidationSchema";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+} from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert } from "react-native";
+import { useDispatch } from "react-redux";
+
+export type RegistrationValues = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNo: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const useRegisterForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const auth = getAuth();
+  const router = useRouter();
+  const { registrationValidationSchema } = useValidation();
+
+  const initialValues: RegistrationValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobileNo: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const saveUserToFirestore = async (userId: string, userData: any) => {
+    try {
+      await firestore()
+        .collection("users")
+        .doc(userId)
+        .set({
+          ...userData,
+          createdAt: new Date().toISOString(),
+          provider: "email",
+        });
+    } catch (error) {
+      console.error("[Firestore] Error saving user:", error);
+      throw error;
+    }
+  };
+
+  const handleRegister = async (values: RegistrationValues) => {
+    setLoading(true);
+    try {
+      console.log("Registration started for:", values.email);
+
+      // Create Firebase user
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        values.email.trim().toLowerCase(),
+        values.password.trim()
+      );
+
+      const user = userCredential.user;
+      if (!user) {
+        throw new Error("No user created");
+      }
+
+      const idToken = await user.getIdToken();
+      dispatch(setStateKey({ key: "token", value: idToken }));
+
+      const userData = {
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
+        email: values.email.trim().toLowerCase(),
+        mobileNo: values.mobileNo.trim(),
+        profileImage: "",
+      };
+
+      await saveUserToFirestore(user.uid, userData);
+      dispatch(setStateKey({ key: "userData", value: userData }));
+
+      Alert.alert(
+        "Success",
+        "Registration Successful! Please login to continue.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.push("/(public)/login"),
+          },
+        ]
+      );
+    } catch (error: any) {
+      console.error("[Register] Error:", error.code, error.message);
+
+      let errorMessage = "Registration failed. Please try again.";
+
+      if (error.code === "auth/email-already-in-use") {
+        errorMessage =
+          "This email is already registered. Please use a different email or try logging in.";
+      } else if (error.code === "auth/invalid-email") {
+        errorMessage =
+          "Invalid email format. Please enter a valid email address.";
+      } else if (error.code === "auth/weak-password") {
+        errorMessage =
+          "Password is too weak. Please use at least 6 characters.";
+      } else if (error.code === "auth/network-request-failed") {
+        errorMessage = "Network error. Please check your internet connection.";
+      }
+
+      Alert.alert("Registration Error", errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const navigateToLogin = () => {
+    router.push("/(public)/login");
+  };
+
+  return {
+    initialValues,
+    registrationValidationSchema,
+    handleRegister,
+    loading,
+    navigateToLogin,
+  };
+};
+
+export default useRegisterForm;

@@ -1,5 +1,6 @@
 import { AuthProvider } from "@/context/AuthContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { persistor, store } from "@/redux/store";
 import {
   DarkTheme,
   DefaultTheme,
@@ -12,6 +13,8 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 // Configure splash screen
 SplashScreen.setOptions({
@@ -45,13 +48,28 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <AuthProvider>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(public)" />
-            <Stack.Screen name="(private)" />
-          </Stack>
-          <StatusBar style="auto" />
-        </AuthProvider>
+        <Provider store={store}>
+          {" "}
+          {/* Redux Provider */}
+          <PersistGate loading={null} persistor={persistor}>
+            <AuthProvider>
+              {" "}
+              {/* Your Auth Context */}
+              <Stack screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen
+                  name="(public)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(private)"
+                  options={{ headerShown: false }}
+                />
+              </Stack>
+              <StatusBar style="auto" />
+            </AuthProvider>
+          </PersistGate>
+        </Provider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );
