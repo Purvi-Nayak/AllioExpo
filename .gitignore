@@ -9,8 +9,7 @@ dist/
 web-build/
 expo-env.d.ts
 # Native - Exclude entire android folder
-android/
-ios/
+
 # Native
 .kotlin/
 *.orig.*
@@ -27,14 +26,16 @@ ios/
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+release.keystore
 
 # macOS
 .DS_Store
 *.pem
 # Firebase config files
-google-services.json
-GoogleService-Info.plist
+# google-services.json
+# GoogleService-Info.plist
 # local env files
+# 
 .env*.local
 
 # typescript

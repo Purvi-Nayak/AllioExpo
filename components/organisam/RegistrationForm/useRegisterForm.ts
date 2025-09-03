@@ -258,7 +258,8 @@ const useRegisterForm = () => {
 
       // Navigate after a short delay to show the toast
       setTimeout(() => {
-        router.push("/(public)/login");
+        router.back();
+        // router.replace("/(public)/login");
       }, 1500);
     } catch (error: any) {
       console.error("[Register] Error:", error.code, error.message);
@@ -286,8 +287,45 @@ const useRegisterForm = () => {
     }
   };
 
+  // const navigateToLogin = () => {
+  //   // router.replace("/(public)/login");
+  //   router.back();
+  // };
+  // const navigateToLogin = () => {
+  //   console.log("🚀 Attempting to navigate to login...");
+
+  //   try {
+  //     // Method 1: Try router.back() first
+  //     if (router.canGoBack()) {
+  //       console.log("✅ Using router.back()");
+  //       router.back();
+  //     } else {
+  //       // Method 2: If can't go back, use replace
+  //       console.log("✅ Using router.replace()");
+  //       router.replace("/(public)/login");
+  //     }
+  //   } catch (error) {
+  //     // Method 3: Fallback to push if replace fails
+  //     console.log("⚠️ Fallback to router.push()");
+  //     console.error("Navigation error:", error);
+  //     router.push("/(public)/login");
+  //   }
+  // };
+
   const navigateToLogin = () => {
-    router.push("/(public)/login");
+    console.log("🚀 Navigating from register to login...");
+
+    try {
+      // Check if we came from login screen
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/(public)/login");
+      }
+    } catch (error) {
+      // Fallback
+      router.navigate("/(public)/login");
+    }
   };
 
   return {

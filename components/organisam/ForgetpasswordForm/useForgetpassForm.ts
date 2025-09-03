@@ -64,7 +64,19 @@ const useForgotPasswordForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
-  const navigateToLogin = () => router.push("/(public)/login");
+  const navigateToLogin = () => {
+    console.log("🚀 Navigating from forgot password to login...");
+
+    try {
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.push("/(public)/login");
+      }
+    } catch (error) {
+      router.navigate("/(public)/login");
+    }
+  };
 
   const handleForgotPassword = async (values: ForgotPasswordValues) => {
     const email = values.email.trim().toLowerCase();
@@ -87,8 +99,12 @@ const useForgotPasswordForm = () => {
       showSuccess("Password reset email sent! Check your inbox.");
 
       // Navigate after a short delay to show the toast
+      // setTimeout(() => {
+      //   navigateToLogin();
+      // }, 2000);
       setTimeout(() => {
-        navigateToLogin();
+        // ✅ Go back to login (removes forgot from stack)
+        router.back();
       }, 2000);
     } catch (error: any) {
       const code = error.code;
