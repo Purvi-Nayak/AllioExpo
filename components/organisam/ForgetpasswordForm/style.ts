@@ -1,19 +1,17 @@
-import { useTheme } from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
+import { useTheme } from "@/constants/Colors";
+import { StyleSheet } from "react-native";
 
-import { scale } from 'react-native-size-matters';
-
+import { scale } from "react-native-size-matters";
 
 const useStyle = () => {
-  const  colors  = useTheme();
+  const colors = useTheme();
   return StyleSheet.create({
     container: {
       marginTop: scale(50),
     },
-    formContainer: {  
+    formContainer: {
       flex: 1,
-      justifyContent: 'center',
-    
+      justifyContent: "center",
     },
     form: {
       gap: scale(20),
@@ -23,18 +21,18 @@ const useStyle = () => {
       paddingHorizontal: scale(10),
     },
     backButton: {
-      position: 'absolute',
+      position: "absolute",
       top: scale(40),
       left: scale(20),
       zIndex: 1,
     },
- 
+
     title: {
       fontSize: scale(34),
       color: colors.primary,
     },
     logoContainer: {
-      alignItems: 'center',
+      alignItems: "center",
       marginBottom: scale(20),
     },
     subtitle: {
@@ -49,10 +47,10 @@ const useStyle = () => {
       paddingVertical: scale(12),
     },
     dividerContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       marginTop: scale(20),
-      alignItems: 'center',
+      alignItems: "center",
       gap: 3,
     },
     orText: {
@@ -62,7 +60,7 @@ const useStyle = () => {
     loginText: {
       paddingVertical: scale(20),
       fontSize: scale(18),
-      textAlign: 'center',
+      textAlign: "center",
       color: colors.primary,
     },
     signUpText: {

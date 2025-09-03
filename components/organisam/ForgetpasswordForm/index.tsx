@@ -83,11 +83,131 @@
 // };
 
 // export default ForgotPasswordForm;
+// import useValidation from "@/utils/velidationSchema";
+// import Button from "@components/atoms/Button";
+// import Input from "@components/atoms/Input";
+// import Text from "@components/atoms/Text";
+// import { useRouter } from "expo-router";
+// import { Formik } from "formik";
+// import React from "react";
+// import {
+//   KeyboardAvoidingView,
+//   Platform,
+//   TouchableOpacity,
+//   View,
+// } from "react-native";
+// import { ScrollView } from "react-native-gesture-handler";
+// import useStyle from "./style";
+
+// // Initial form values
+// const initialValues = {
+//   email: "",
+// };
+
+// const ForgotPasswordForm: React.FC = () => {
+//   const { forgotPasswordSchema } = useValidation();
+
+//   const router = useRouter();
+//   const styles = useStyle();
+//   const handleForgotPassword = async (values: typeof initialValues) => {
+//     try {
+//       // Log all form data to console
+//       console.log("=== FORGOT PASSWORD FORM SUBMISSION ===");
+//       console.log("Forgot Password Form Data:", values);
+//       console.log("Email:", values.email);
+//       console.log("=======================================");
+
+//       // Simulate API call delay
+//       console.log("Sending password reset request...");
+//       await new Promise((resolve) => setTimeout(resolve, 1500));
+
+//       console.log("Password reset link sent successfully!");
+//       console.log("Navigating to login screen...");
+
+//       // Navigate to login screen
+//       router.push("/(public)/login");
+//     } catch (error) {
+//       console.error("Forgot Password Error:", error);
+//     }
+//   };
+
+//   const navigateToRegister = () => {
+//     console.log("User clicked 'Sign Up' - navigating to register screen");
+//     router.push("/(public)/register");
+//   };
+
+//   const navigateToLogin = () => {
+//     console.log("User clicked 'Back to Login' - navigating to login screen");
+//     router.push("/(public)/login");
+//   };
+
+//   return (
+//     <KeyboardAvoidingView
+//       style={styles.container}
+//       behavior={Platform.OS === "ios" ? "padding" : "height"}
+//     >
+//       <ScrollView style={styles.scrollView}>
+//         <Formik
+//           initialValues={initialValues}
+//           validationSchema={forgotPasswordSchema}
+//           onSubmit={handleForgotPassword}
+//         >
+//           {({
+//             handleChange,
+//             handleSubmit,
+//             values,
+//             errors,
+//             touched,
+//             isSubmitting,
+//           }) => (
+//             <>
+//             <View style={styles.form} >
+//               <Text style={styles.title} type="bold">
+//                 Forgot Password
+//               </Text>
+//               <Text style={styles.subtitle}>
+//                 Enter your email to receive a password reset link
+//               </Text>
+//               <Input
+//                 label="Email"
+//                 placeholder="e.g., john.doe@example.com"
+//                 value={values.email}
+//                 onChangeText={handleChange("email")}
+//                 error={touched.email ? errors.email : undefined}
+//                 touched={touched.email}
+//                 keyboardType="email-address"
+//                 autoCapitalize="none"
+//               />
+
+//               <Button
+//                 title={isSubmitting ? "Sending..." : "Send Reset Link"}
+//                 onPress={handleSubmit as () => void}
+//                 disabled={isSubmitting}
+//                 loading={isSubmitting}
+//               />
+//             </View>
+//             </>
+//           )}
+
+//         </Formik>
+//       </ScrollView>
+
+//       <View style={styles.dividerContainer}>
+//         <TouchableOpacity onPress={navigateToLogin}>
+//           <Text style={styles.loginText} type="semibold">
+//             Back to Login
+//           </Text>
+//         </TouchableOpacity>
+//       </View>
+//     </KeyboardAvoidingView>
+//   );
+// };
+
+// export default ForgotPasswordForm;
 import useValidation from "@/utils/velidationSchema";
 import Button from "@components/atoms/Button";
 import Input from "@components/atoms/Input";
 import Text from "@components/atoms/Text";
-import { useRouter } from "expo-router";
 import { Formik } from "formik";
 import React from "react";
 import {
@@ -98,48 +218,20 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import useStyle from "./style";
+import useForgotPasswordForm from "./useForgetpassForm";
 
-// Initial form values
-const initialValues = {
-  email: "",
+// Define the type for form values
+type ForgotPasswordValues = {
+  email: string;
 };
 
+const initialValues: ForgotPasswordValues = { email: "" };
+
 const ForgotPasswordForm: React.FC = () => {
-  const { forgotPasswordSchema } = useValidation();
-
-  const router = useRouter();
   const styles = useStyle();
-  const handleForgotPassword = async (values: typeof initialValues) => {
-    try {
-      // Log all form data to console
-      console.log("=== FORGOT PASSWORD FORM SUBMISSION ===");
-      console.log("Forgot Password Form Data:", values);
-      console.log("Email:", values.email);
-      console.log("=======================================");
-
-      // Simulate API call delay
-      console.log("Sending password reset request...");
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      console.log("Password reset link sent successfully!");
-      console.log("Navigating to login screen...");
-
-      // Navigate to login screen
-      router.push("/(public)/login");
-    } catch (error) {
-      console.error("Forgot Password Error:", error);
-    }
-  };
-
-  const navigateToRegister = () => {
-    console.log("User clicked 'Sign Up' - navigating to register screen");
-    router.push("/(public)/register");
-  };
-
-  const navigateToLogin = () => {
-    console.log("User clicked 'Back to Login' - navigating to login screen");
-    router.push("/(public)/login");
-  };
+  const { forgotPasswordSchema } = useValidation();
+  const { handleForgotPassword, navigateToLogin, loading } =
+    useForgotPasswordForm();
 
   return (
     <KeyboardAvoidingView
@@ -152,16 +244,8 @@ const ForgotPasswordForm: React.FC = () => {
           validationSchema={forgotPasswordSchema}
           onSubmit={handleForgotPassword}
         >
-          {({
-            handleChange,
-            handleSubmit,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <>
-            <View style={styles.form} >
+          {({ handleChange, handleSubmit, values, errors, touched }) => (
+            <View style={styles.form}>
               <Text style={styles.title} type="bold">
                 Forgot Password
               </Text>
@@ -178,20 +262,16 @@ const ForgotPasswordForm: React.FC = () => {
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
-
               <Button
-                title={isSubmitting ? "Sending..." : "Send Reset Link"}
+                title={loading ? "Sending..." : "Send Reset Link"}
                 onPress={handleSubmit as () => void}
-                disabled={isSubmitting}
-                loading={isSubmitting}
+                disabled={loading}
+                loading={loading}
               />
             </View>
-            </>
           )}
-          
         </Formik>
       </ScrollView>
-
       <View style={styles.dividerContainer}>
         <TouchableOpacity onPress={navigateToLogin}>
           <Text style={styles.loginText} type="semibold">

@@ -1,21 +1,15 @@
-// import { useState } from 'react';
-
-// import { useDispatch } from 'react-redux';
+// import { setStateKey } from "@/redux/slices/AuthSlice";
+// import useValidation from "@/utils/velidationSchema";
+// import firebase from "@react-native-firebase/app";
 // import {
-//   getAuth,
 //   createUserWithEmailAndPassword,
-// } from '@react-native-firebase/auth';
-// import analytics from '@react-native-firebase/analytics';
-// import crashlytics from '@react-native-firebase/crashlytics';
-// import perf from '@react-native-firebase/perf';
-// import firestore from '@react-native-firebase/firestore';
-
-// import { useNavigation } from '@react-navigation/native';
-// import { setStateKey } from '@redux/slices/AuthSlice';
-// import useValidation from '@utils/validationSchema';
-// import { AUTH } from '@utils/constant';
-// import { AuthNavigationProp } from '@types/navigations';
-// import { showError, showSuccess } from '@utils/toast';
+//   getAuth,
+// } from "@react-native-firebase/auth";
+// import firestore from "@react-native-firebase/firestore";
+// import { useRouter } from "expo-router";
+// import { useState } from "react";
+// import { Alert } from "react-native";
+// import { useDispatch } from "react-redux";
 
 // export type RegistrationValues = {
 //   firstName: string;
@@ -26,100 +20,125 @@
 //   confirmPassword: string;
 // };
 
-// type UseRegisterOptions = {
-//   onNavigateToLogin?: () => void;
-// };
-
-// const useRegister = (options?: UseRegisterOptions) => {
+// const useRegisterForm = () => {
 //   const [loading, setLoading] = useState<boolean>(false);
 //   const dispatch = useDispatch();
-//   const auth = getAuth();
-//   const navigation = useNavigation<AuthNavigationProp>();
+//   const router = useRouter();
 //   const { registrationValidationSchema } = useValidation();
 
 //   const initialValues: RegistrationValues = {
-//     firstName: '',
-//     lastName: '',
-//     email: '',
-//     mobileNo: '',
-//     password: '',
-//     confirmPassword: '',
+//     firstName: "",
+//     lastName: "",
+//     email: "",
+//     mobileNo: "",
+//     password: "",
+//     confirmPassword: "",
+//   };
+
+//   const checkFirebaseInitialization = () => {
+//     if (firebase.apps.length === 0) {
+//       throw new Error("Firebase not initialized");
+//     }
 //   };
 
 //   const saveUserToFirestore = async (userId: string, userData: any) => {
 //     try {
-//       await firestore().collection('users').doc(userId).set(userData);
+//       await firestore()
+//         .collection("users")
+//         .doc(userId)
+//         .set({
+//           ...userData,
+//           createdAt: new Date().toISOString(),
+//           provider: "email",
+//           uid: userId,
+//         });
+//       console.log("User saved to Firestore successfully");
 //     } catch (error) {
-//       console.error('[Firestore] Error saving user:', error);
+//       console.error("[Firestore] Error saving user:", error);
+//       throw error;
 //     }
 //   };
 
 //   const handleRegister = async (values: RegistrationValues) => {
-//     const trace = await perf().startTrace('registration');
 //     setLoading(true);
 //     try {
-//       crashlytics().log('Registration started for ' + values.email);
+//       // Check if Firebase is initialized
+//       checkFirebaseInitialization();
 
+//       console.log("Registration started for:", values.email);
+
+//       const auth = getAuth();
+
+//       // Create Firebase user
 //       const userCredential = await createUserWithEmailAndPassword(
 //         auth,
-//         values.email,
-//         values.password,
+//         values.email.trim().toLowerCase(),
+//         values.password.trim()
 //       );
+
 //       const user = userCredential.user;
 //       if (!user) {
-//         throw new Error('No user created');
+//         throw new Error("No user created");
 //       }
+
+//       console.log("User created successfully:", user.uid);
+
+//       const idToken = await user.getIdToken();
+//       dispatch(setStateKey({ key: "token", value: idToken }));
 
 //       const userData = {
-//         firstName: values.firstName,
-//         lastName: values.lastName,
-//         email: values.email,
-//         mobileNo: values.mobileNo,
+//         firstName: values.firstName.trim(),
+//         lastName: values.lastName.trim(),
+//         email: values.email.trim().toLowerCase(),
+//         mobileNo: values.mobileNo.trim(),
+//         profileImage: "",
+//         uid: user.uid,
 //       };
+
+//       // Save to Firestore
 //       await saveUserToFirestore(user.uid, userData);
-//       dispatch(setStateKey({ key: 'userData', value: userData }));
 
-//       await analytics().logEvent('register', {
-//         method: 'email',
-//         email: values.email,
-//       });
-//       crashlytics().log('Registration successful');
-//       crashlytics().setUserId(user.uid);
-//       crashlytics().setAttribute('email', values.email);
+//       // Save to Redux
+//       dispatch(setStateKey({ key: "userData", value: userData }));
 
-//       showSuccess('Registration Successful!');
-//       navigation.navigate(AUTH.Login);
-//     } catch (error: any) {
-//       crashlytics().log('Registration error');
-//       crashlytics().recordError(error);
-//       console.error(
-//         '[Register] Error code:',
-//         error.code,
-//         'message:',
-//         error.message,
+//       Alert.alert(
+//         "Success",
+//         "Registration Successful! Please login to continue.",
+//         [
+//           {
+//             text: "OK",
+//             onPress: () => router.push("/(public)/login"),
+//           },
+//         ]
 //       );
+//     } catch (error: any) {
+//       console.error("[Register] Error:", error.code, error.message);
 
-//       if (error.code === 'auth/email-already-in-use') {
-//         showError('Email already in use.');
-//       } else if (error.code === 'auth/invalid-email') {
-//         showError('Invalid email format.');
-//       } else {
-//         showError(
-//           error?.response?.data?.message ||
-//             'Registration failed. Please try again.',
-//         );
+//       let errorMessage = "Registration failed. Please try again.";
+
+//       if (error.code === "auth/email-already-in-use") {
+//         errorMessage =
+//           "This email is already registered. Please use a different email or try logging in.";
+//       } else if (error.code === "auth/invalid-email") {
+//         errorMessage =
+//           "Invalid email format. Please enter a valid email address.";
+//       } else if (error.code === "auth/weak-password") {
+//         errorMessage =
+//           "Password is too weak. Please use at least 6 characters.";
+//       } else if (error.code === "auth/network-request-failed") {
+//         errorMessage = "Network error. Please check your internet connection.";
+//       } else if (error.message === "Firebase not initialized") {
+//         errorMessage = "App is still loading. Please try again in a moment.";
 //       }
+
+//       Alert.alert("Registration Error", errorMessage);
 //     } finally {
 //       setLoading(false);
-//       trace.stop();
 //     }
 //   };
 
 //   const navigateToLogin = () => {
-//     if (options?.onNavigateToLogin) {
-//       options.onNavigateToLogin();
-//     }
-//     navigation.popToTop();
+//     router.push("/(public)/login");
 //   };
 
 //   return {
@@ -131,9 +150,11 @@
 //   };
 // };
 
-// export default useRegister;
+// export default useRegisterForm;
 import { setStateKey } from "@/redux/slices/AuthSlice";
+import { showError, showSuccess } from "@/utils/toastConfig";
 import useValidation from "@/utils/velidationSchema";
+import firebase from "@react-native-firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -141,7 +162,6 @@ import {
 import firestore from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert } from "react-native";
 import { useDispatch } from "react-redux";
 
 export type RegistrationValues = {
@@ -156,7 +176,6 @@ export type RegistrationValues = {
 const useRegisterForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const auth = getAuth();
   const router = useRouter();
   const { registrationValidationSchema } = useValidation();
 
@@ -169,6 +188,12 @@ const useRegisterForm = () => {
     confirmPassword: "",
   };
 
+  const checkFirebaseInitialization = () => {
+    if (firebase.apps.length === 0) {
+      throw new Error("Firebase not initialized");
+    }
+  };
+
   const saveUserToFirestore = async (userId: string, userData: any) => {
     try {
       await firestore()
@@ -178,7 +203,9 @@ const useRegisterForm = () => {
           ...userData,
           createdAt: new Date().toISOString(),
           provider: "email",
+          uid: userId,
         });
+      console.log("User saved to Firestore successfully");
     } catch (error) {
       console.error("[Firestore] Error saving user:", error);
       throw error;
@@ -188,7 +215,12 @@ const useRegisterForm = () => {
   const handleRegister = async (values: RegistrationValues) => {
     setLoading(true);
     try {
+      // Check if Firebase is initialized
+      checkFirebaseInitialization();
+
       console.log("Registration started for:", values.email);
+
+      const auth = getAuth();
 
       // Create Firebase user
       const userCredential = await createUserWithEmailAndPassword(
@@ -202,6 +234,8 @@ const useRegisterForm = () => {
         throw new Error("No user created");
       }
 
+      console.log("User created successfully:", user.uid);
+
       const idToken = await user.getIdToken();
       dispatch(setStateKey({ key: "token", value: idToken }));
 
@@ -211,21 +245,21 @@ const useRegisterForm = () => {
         email: values.email.trim().toLowerCase(),
         mobileNo: values.mobileNo.trim(),
         profileImage: "",
+        uid: user.uid,
       };
 
+      // Save to Firestore
       await saveUserToFirestore(user.uid, userData);
+
+      // Save to Redux
       dispatch(setStateKey({ key: "userData", value: userData }));
 
-      Alert.alert(
-        "Success",
-        "Registration Successful! Please login to continue.",
-        [
-          {
-            text: "OK",
-            onPress: () => router.push("/(public)/login"),
-          },
-        ]
-      );
+      showSuccess("Registration Successful! Please login to continue.");
+
+      // Navigate after a short delay to show the toast
+      setTimeout(() => {
+        router.push("/(public)/login");
+      }, 1500);
     } catch (error: any) {
       console.error("[Register] Error:", error.code, error.message);
 
@@ -242,9 +276,11 @@ const useRegisterForm = () => {
           "Password is too weak. Please use at least 6 characters.";
       } else if (error.code === "auth/network-request-failed") {
         errorMessage = "Network error. Please check your internet connection.";
+      } else if (error.message === "Firebase not initialized") {
+        errorMessage = "App is still loading. Please try again in a moment.";
       }
 
-      Alert.alert("Registration Error", errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }

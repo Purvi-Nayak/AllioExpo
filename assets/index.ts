@@ -1,3 +1,56 @@
+// export const FONTS = {
+//   medium: "Poppins-Medium",
+//   bold: "Poppins-Bold",
+//   light: "Poppins-Light",
+//   regular: "Poppins-Regular",
+//   extrabold: "Poppins-ExtraBold",
+//   semibold: "Poppins-SemiBold",
+// };
+
+// export const ICONS = {
+//   eye: require("./icons/eye.png"),
+//   eyeOff: require("./icons/eyeoff.png"),
+//   down: require("./icons/arrowdown.png"),
+//   check: require("./icons/check.png"),
+//   cancel: require("./icons/cancel.png"),
+//   logout: require("./icons/logout.png"),
+//   BackArrow: require("./icons/simple-backArrow.png"),
+//   Clear: require("./icons/clear.png"),
+//   FaceBook: require("./icons/facebook.png"),
+//   Google: require("./icons/googleicon.png"),
+//   LinkedIn: require("./icons/message.png"),
+//   Github: require("./icons/github.png"),
+//   ArrowRight: require("./icons/right-arrow.png"),
+//   mpinSecure: require("./icons/mobilesecure.png"),
+//   gallery: require("./icons/gallery.png"),
+//   compressed: require("./icons/compressed.png"),
+//   NoVideo: require("./icons/video.png"),
+//   profile: require("./icons/profile.png"),
+//   Left: require("./icons/arrow.png"),
+//   VideoPlay: require("./icons/videoPlay.png"),
+//   Share: require("./icons/share.png"),
+//   Send: require("./icons/send.png"),
+//   Download: require("./icons/download.png"),
+//   light: require("./icons/light.png"),
+//   MultipleUser: require("./icons/Multiple_User.png"),
+//   true: require("./icons/true.png"),
+//   false: require("./icons/false.png"),
+//   menu: require("./icons/menu.png"),
+//   stop: require("./icons/stop.png"),
+//   copy: require("./icons/copy.png"),
+//   Attach: require("./icons/attach.png"),
+//   gemini: require("./icons/Geminiai.png"),
+//   Edit: require("./icons/edit.png"),
+// };
+
+// export const IMAGES = {
+//   First: require("./images/firstScreen.png"),
+//   SecondOnboarding: require("./images/onboardingSecond.png"),
+//   OnboardingThree: require("./images/onboardingThree.png"),
+//   Allio_Logo: require("./images/Allio_logo.png"),
+//   Mobile: require("./images/mobile.png"),
+//   Notification: require("./images/notification.jpg"),
+// };
 export const FONTS = {
   medium: "Poppins-Medium",
   bold: "Poppins-Bold",
@@ -41,14 +94,20 @@ export const ICONS = {
   Attach: require("./icons/attach.png"),
   gemini: require("./icons/Geminiai.png"),
   Edit: require("./icons/edit.png"),
+  // Additional icons added
+  studio: require("./icons/studio.png"),
 };
 
-
 export const IMAGES = {
-    First: require('./images/firstScreen.png'),
-    SecondOnboarding: require('./images/onboardingSecond.png'),
-    OnboardingThree: require('./images/onboardingThree.png'),
-    Allio_Logo: require('./images/Allio_logo.png'),
-    Mobile: require('./images/mobile.png'),
-    Notification: require('./images/notification.jpg'),
-} 
+  First: require("./images/firstScreen.png"),
+  SecondOnboarding: require("./images/onboardingSecond.png"),
+  OnboardingThree: require("./images/onboardingThree.png"),
+  Allio_Logo: require("./images/Allio_logo.png"),
+  Mobile: require("./images/mobile.png"),
+  Notification: require("./images/notification.jpg"),
+  // Additional images added
+  AdaptiveIcon: require("./images/adaptive-icon.png"),
+  Favicon: require("./images/favicon.png"),
+  SplashIcon: require("./images/splash-icon.png"),
+  Icon: require("./images/icon.png"),
+};

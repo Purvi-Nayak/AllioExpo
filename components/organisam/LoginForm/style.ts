@@ -1,15 +1,14 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import { useTheme } from '@/constants/Colors';
-import { height } from '@utils/helper';
-import { scale } from 'react-native-size-matters';
+import { useTheme } from "@/constants/Colors";
+import { height } from "@utils/helper";
+import { scale } from "react-native-size-matters";
 
 const useStyle = () => {
-  const  colors  = useTheme();
+  const colors = useTheme();
   return StyleSheet.create({
     logoContainer: {
-      alignItems: 'center',
-     
+      alignItems: "center",
     },
     title: {
       fontSize: scale(34),
@@ -18,30 +17,30 @@ const useStyle = () => {
     subtitle: {
       fontSize: scale(16),
       color: colors.text,
-      textAlign: 'left',
+      textAlign: "left",
       marginBottom: scale(30),
     },
     formContainer: {
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
       paddingHorizontal: scale(10),
-      paddingVertical: height * 0.10,
+      paddingVertical: height * 0.1,
     },
     logo: {
       width: scale(200),
       height: scale(200),
-      resizeMode: 'contain',
+      resizeMode: "contain",
     },
     dividerContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       gap: 3,
     },
     socialSignInText: {
       fontSize: scale(16),
       color: colors.primary,
-      textAlign: 'center',
+      textAlign: "center",
       marginVertical: scale(10),
     },
     emailInput: {
@@ -68,14 +67,14 @@ const useStyle = () => {
     iconStyle: {
       width: scale(18),
       height: scale(18),
-      resizeMode: 'contain',
+      resizeMode: "contain",
     },
 
     dividerText: {
       color: colors.primary,
       fontSize: scale(16),
-      justifyContent: 'center',
-      textAlign: 'center',
+      justifyContent: "center",
+      textAlign: "center",
     },
     orText: {
       color: colors.text,
@@ -86,32 +85,32 @@ const useStyle = () => {
       fontSize: scale(16),
     },
     container: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
       marginTop: scale(20),
       paddingHorizontal: scale(40),
     },
     icon: {
       width: scale(32),
       height: scale(32),
-      resizeMode: 'contain',
+      resizeMode: "contain",
     },
     SocialButtonStyle: {
-      flexDirection: 'row',
-      justifyContent: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
       marginVertical: 12,
     },
     loginText: {
       paddingVertical: scale(20),
       fontSize: scale(18),
-      textAlign: 'center',
+      textAlign: "center",
       color: colors.gray,
     },
     loginLink: {
       fontSize: scale(18),
       color: colors.primary,
-      textAlign: 'center',
+      textAlign: "center",
     },
     line: {
       flex: 1,

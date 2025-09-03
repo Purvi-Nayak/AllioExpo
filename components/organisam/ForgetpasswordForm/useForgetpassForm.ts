@@ -1,60 +1,114 @@
-// import { useNavigation } from '@react-navigation/native';
-// import auth from '@react-native-firebase/auth';
+// import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
+// import { checkUserExistsByEmail } from "@utils/helper";
+// import { useRouter } from "expo-router";
+// import { useState } from "react";
+// import { Alert } from "react-native";
 
-// import { checkUserExistsByEmail } from '@utils/helper';
-// import { AUTH } from '@utils/constant';
-// import { AuthNavigationProp } from '@types/navigations';
-// import { showError, showSuccess } from '@utils/toast';
-// import { useState } from 'react';
+// export type ForgotPasswordValues = { email: string };
 
-// type UseForgotPasswordOptions = {
-//   onNavigateToLogin?: () => void;
-// };
-
-// export const useForgotPassword = (options?: UseForgotPasswordOptions) => {
+// const useForgotPasswordForm = () => {
 //   const [loading, setLoading] = useState<boolean>(false);
-//   const navigation = useNavigation<AuthNavigationProp>();
+//   const router = useRouter();
 
-//   const navigateToLogin = () => {
-//     if (options?.onNavigateToLogin) {
-//       options.onNavigateToLogin();
-//     }
-//     navigation.popToTop();
-//   };
+//   const navigateToLogin = () => router.push("/(public)/login");
 
-//   const handleForgotPassword = async (values: { email: string }) => {
+//   const handleForgotPassword = async (values: ForgotPasswordValues) => {
 //     const email = values.email.trim().toLowerCase();
 //     setLoading(true);
 //     try {
 //       if (!email) {
-//         showError('Email is required');
+//         Alert.alert("Error", "Please enter your email address.");
 //         return;
 //       }
 
-//       const userExists = await checkUserExistsByEmail(email);
-//       if (!userExists) {
-//         showError('Email Does Not Exist!');
+//       const exists = await checkUserExistsByEmail(email);
+//       if (!exists) {
+//         Alert.alert("Error", "No account found with this email address.");
 //         return;
 //       }
 
-//       await auth().sendPasswordResetEmail(email);
-//       showSuccess('Password reset email sent successfully!');
-//       navigation.navigate(AUTH.Login);
-//       return;
+//       const auth = getAuth();
+//       await sendPasswordResetEmail(auth, email);
+
+//       Alert.alert("Success", "Password reset email sent! Check your inbox.", [
+//         { text: "OK", onPress: navigateToLogin },
+//       ]);
 //     } catch (error: any) {
-//       let message = 'Something went wrong';
-//       if (error.code === 'auth/invalid-email') {
-//         message = 'Invalid email address';
-//       } else if (error.code === 'auth/user-not-found') {
-//         message = 'No user found with this email';
-//       } else if (error.code === 'auth/network-request-failed') {
-//         message = 'Network error, check your internet connection';
-//       }
-//       return { success: false, message };
+//       const code = error.code;
+//       let message = "Failed to send reset email. Please try again.";
+//       if (code === "auth/user-not-found")
+//         message = "No user found with this email address.";
+//       else if (code === "auth/invalid-email")
+//         message = "Invalid email address format.";
+//       else if (code === "auth/too-many-requests")
+//         message = "Too many requests. Please try later.";
+//       Alert.alert("Error", message);
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
-//   return { handleForgotPassword, navigateToLogin, loading };
+//   return { loading, handleForgotPassword, navigateToLogin };
 // };
+
+// export default useForgotPasswordForm;
+import { showError, showSuccess } from "@/utils/toastConfig";
+import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
+import { checkUserExistsByEmail } from "@utils/helper";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+
+export type ForgotPasswordValues = { email: string };
+
+const useForgotPasswordForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+
+  const navigateToLogin = () => router.push("/(public)/login");
+
+  const handleForgotPassword = async (values: ForgotPasswordValues) => {
+    const email = values.email.trim().toLowerCase();
+    setLoading(true);
+    try {
+      if (!email) {
+        showError("Please enter your email address.");
+        return;
+      }
+
+      const exists = await checkUserExistsByEmail(email);
+      if (!exists) {
+        showError("No account found with this email address.");
+        return;
+      }
+
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+
+      showSuccess("Password reset email sent! Check your inbox.");
+
+      // Navigate after a short delay to show the toast
+      setTimeout(() => {
+        navigateToLogin();
+      }, 2000);
+    } catch (error: any) {
+      const code = error.code;
+      let message = "Failed to send reset email. Please try again.";
+
+      if (code === "auth/user-not-found") {
+        message = "No user found with this email address.";
+      } else if (code === "auth/invalid-email") {
+        message = "Invalid email address format.";
+      } else if (code === "auth/too-many-requests") {
+        message = "Too many requests. Please try again later.";
+      }
+
+      showError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loading, handleForgotPassword, navigateToLogin };
+};
+
+export default useForgotPasswordForm;

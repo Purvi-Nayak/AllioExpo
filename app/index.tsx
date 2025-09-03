@@ -1,33 +1,75 @@
-import { Stack, useRouter } from "expo-router";
-import { useEffect } from "react";
-import { ActivityIndicator, View } from "react-native";
-import { useAuth } from "../context/AuthContext";
+// import { Stack, useRouter } from "expo-router";
+// import { useEffect } from "react";
+// import { ActivityIndicator, View } from "react-native";
+// import { useAuth } from "../context/AuthContext";
 
-export default function PrivateLayout() {
-  const { isAuthenticated, isLoading } = useAuth();
+// export default function PrivateLayout() {
+//   const { isAuthenticated, isLoading } = useAuth();
+//   const router = useRouter();
+
+//   useEffect(() => {
+//     if (!isLoading && !isAuthenticated) {
+//       router.replace("/(public)/login");
+//     }
+//   }, [isAuthenticated, isLoading]);
+
+//   if (isLoading) {
+//     return (
+//       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+//         <ActivityIndicator size="large" />
+//       </View>
+//     );
+//   }
+
+//   if (!isAuthenticated) {
+//     return null;
+//   }
+
+//   return (
+//     <Stack screenOptions={{ headerShown: false }}>
+//       <Stack.Screen name="(tabs)" />
+//     </Stack>
+//   );
+// }
+import { RootState } from "@/redux/store";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { useSelector } from "react-redux";
+
+export default function IndexScreen() {
+  const { isAuthenticated, token } = useSelector(
+    (state: RootState) => state.auth
+  );
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace("/(public)/login");
+    // Small delay to allow Redux persist to rehydrate
+    const checkAuthStatus = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsLoading(false);
+    };
+
+    checkAuthStatus();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (isAuthenticated && token) {
+        // User is authenticated, redirect to private area
+        router.replace("/(private)/(tabs)/home");
+      } else {
+        // User is not authenticated, redirect to login
+        router.replace("/(public)/login");
+      }
     }
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, token, isLoading, router]);
 
-  if (isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
+  // Show loading screen while checking authentication
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)" />
-    </Stack>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 }
