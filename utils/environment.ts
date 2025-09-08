@@ -1,0 +1,83 @@
+import Constants from 'expo-constants';
+
+export interface EnvironmentConfig {
+  ENV: 'local' | 'development' | 'staging' | 'production';
+  API_BASE_URL: string;
+  APP_NAME: string;
+  FIREBASE_PROJECT_ID: string;
+  DEBUG_MODE: boolean;
+  LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error';
+}
+
+const getEnvironmentConfig = (): EnvironmentConfig => {
+  const env = Constants.expoConfig?.extra?.ENV || process.env.EXPO_PUBLIC_ENV || 'local';
+  
+  const config: Record<string, EnvironmentConfig> = {
+    local: {
+      ENV: 'local',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api',
+      APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Local',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'your-local-firebase-project',
+      DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
+      LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'debug',
+    },
+    development: {
+      ENV: 'development',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://dev-api.allioexpo.com/api',
+      APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Dev',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-dev',
+      DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
+      LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'info',
+    },
+    staging: {
+      ENV: 'staging',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://staging-api.allioexpo.com/api',
+      APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Staging',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-staging',
+      DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
+      LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'warn',
+    },
+    production: {
+      ENV: 'production',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.allioexpo.com/api',
+      APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-prod',
+      DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
+      LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'error',
+    },
+  };
+
+  return config[env as string] || config.local;
+};
+
+export const Environment = getEnvironmentConfig();
+
+// Helper functions
+export const isProduction = () => Environment.ENV === 'production';
+export const isDevelopment = () => Environment.ENV === 'development';
+export const isStaging = () => Environment.ENV === 'staging';
+export const isLocal = () => Environment.ENV === 'local';
+
+// Logging utility based on environment
+export const Logger = {
+  debug: (...args: any[]) => {
+    if (Environment.LOG_LEVEL === 'debug' && Environment.DEBUG_MODE) {
+      console.log('[DEBUG]', ...args);
+    }
+  },
+  info: (...args: any[]) => {
+    if (['debug', 'info'].includes(Environment.LOG_LEVEL)) {
+      console.info('[INFO]', ...args);
+    }
+  },
+  warn: (...args: any[]) => {
+    if (['debug', 'info', 'warn'].includes(Environment.LOG_LEVEL)) {
+      console.warn('[WARN]', ...args);
+    }
+  },
+  error: (...args: any[]) => {
+    console.error('[ERROR]', ...args);
+  },
+};
+
+export default Environment;

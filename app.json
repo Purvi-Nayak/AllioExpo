@@ -55,7 +55,7 @@
 {
   "expo": {
     "name": "AllioExpo",
-    "slug": "AllioExpo",
+    "slug": "AllioExpo", 
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

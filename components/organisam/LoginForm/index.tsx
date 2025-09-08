@@ -229,7 +229,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
 
       <View style={styles.SocialButtonStyle}>
         <SignInWithFacebook setLoading={setLoading} />
-        <SignInWithGoogle setLoading={setLoading} />
+        <SignInWithGoogle setLoading={setLoading ?? (() => {})} />
       </View>
 
       <View style={styles.dividerContainer}>
