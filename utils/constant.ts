@@ -1,4 +1,5 @@
 import { IMAGES } from '../assets';
+import { Environment } from './environment';
 
 import { width } from './helper';
 interface OnboardingItem {
@@ -7,13 +8,15 @@ interface OnboardingItem {
   title: string;
   description: string;
 }
-const WEB_CLIENT_ID =
-  '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com';
+
+// Use environment-based Google Web Client ID instead of hardcoded
+const WEB_CLIENT_ID = Environment.GOOGLE_WEB_CLIENT_ID;
 
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const BASE_URL = 'https://5840f5dbc961.ngrok-free.app/api' as const;
+// Use environment-based API URL instead of hardcoded
+const BASE_URL = Environment.API_BASE_URL;
 
 const onboardingData: OnboardingItem[] = [
   {

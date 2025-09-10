@@ -87,9 +87,6 @@ This allows you to install all three versions on the same device simultaneously.
 import { Environment, Logger, AppConfig } from '@utils/environment';
 
 // Access environment variables
-console.log('Current environment:', Environment.ENV);
-console.log('API URL:', Environment.API_BASE_URL);
-console.log('Debug mode:', Environment.DEBUG_MODE);
 
 // Use environment-specific logging
 Logger.debug('This only shows in debug mode');

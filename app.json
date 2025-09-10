@@ -73,7 +73,8 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses Face ID for secure authentication."
-      }
+      },
+      "jsEngine": "hermes"
     },
     "android": {
       "adaptiveIcon": {
@@ -86,7 +87,8 @@
       "permissions": [
         "USE_FINGERPRINT",
         "USE_BIOMETRIC"
-      ]
+      ],
+      "jsEngine": "hermes"
     },
     "web": {
       "bundler": "metro",
@@ -106,7 +108,7 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
-          "imageWidth": 400,
+          "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#FFCE1B"
         }

@@ -5,6 +5,8 @@ export interface EnvironmentConfig {
   API_BASE_URL: string;
   APP_NAME: string;
   FIREBASE_PROJECT_ID: string;
+  GOOGLE_WEB_CLIENT_ID: string;
+  FACEBOOK_APP_ID: string;
   DEBUG_MODE: boolean;
   LOG_LEVEL: 'debug' | 'info' | 'warn' | 'error';
 }
@@ -15,33 +17,41 @@ const getEnvironmentConfig = (): EnvironmentConfig => {
   const config: Record<string, EnvironmentConfig> = {
     local: {
       ENV: 'local',
-      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://allio-app-bxwta.ondigitalocean.app/api',
       APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Local',
-      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'your-local-firebase-project',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allio-cd2b5',
+      GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com',
+      FACEBOOK_APP_ID: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193',
       DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
       LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'debug',
     },
     development: {
       ENV: 'development',
-      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://dev-api.allioexpo.com/api',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://allio-app-bxwta.ondigitalocean.app/api',
       APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Dev',
-      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-dev',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allio-cd2b5',
+      GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com',
+      FACEBOOK_APP_ID: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193',
       DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
       LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'info',
     },
     staging: {
       ENV: 'staging',
-      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://staging-api.allioexpo.com/api',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://allio-app-bxwta.ondigitalocean.app/api',
       APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo Staging',
-      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-staging',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allio-cd2b5',
+      GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com',
+      FACEBOOK_APP_ID: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193',
       DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
       LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'warn',
     },
     production: {
       ENV: 'production',
-      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://api.allioexpo.com/api',
+      API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || 'https://allio-app-bxwta.ondigitalocean.app/api',
       APP_NAME: process.env.EXPO_PUBLIC_APP_NAME || 'AllioExpo',
-      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allioexpo-prod',
+      FIREBASE_PROJECT_ID: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID || 'allio-cd2b5',
+      GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || '299086233123-40u7rfe1tdb4q5m7341rtdqo5qabf7eu.apps.googleusercontent.com',
+      FACEBOOK_APP_ID: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193',
       DEBUG_MODE: process.env.EXPO_PUBLIC_DEBUG_MODE === 'true',
       LOG_LEVEL: (process.env.EXPO_PUBLIC_LOG_LEVEL as any) || 'error',
     },

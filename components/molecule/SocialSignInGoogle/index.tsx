@@ -7,9 +7,10 @@ import {
   getAuth,
   signInWithCredential,
 } from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
+import firestore, { doc, setDoc } from "@react-native-firebase/firestore";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { checkUserExistsByEmail } from "@utils/helper";
+import { useRouter } from "expo-router";
 import React, { memo } from "react";
 import { useDispatch } from "react-redux";
 import SocialButton from "../socialButton";
@@ -20,6 +21,7 @@ interface SignInWithGoogleProps {
 
 const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -57,11 +59,21 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
       };
 
       if (!userExists) {
-        await firestore().collection("users").doc(user.uid).set(userData);
+        // Use modern Firebase v22+ API
+        const db = firestore();
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(userDocRef, userData);
       }
 
       dispatch(setStateKey({ key: "token", value: idToken }));
       dispatch(setStateKey({ key: "userData", value: userData }));
+      
+     
+      
+      // Navigate to home page after successful authentication
+      setTimeout(() => {
+        router.replace("/(private)/(tabs)/home");
+      }, 100);
     } catch (error: any) {
       console.error("Google Sign-In Error:", error);
 

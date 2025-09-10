@@ -74,7 +74,13 @@ export default {
       bundleIdentifier: appConfig.bundleIdentifier,
       googleServicesFile: './GoogleService-Info.plist',
       infoPlist: {
-        NSFaceIDUsageDescription: 'This app uses Face ID for secure authentication.'
+        NSFaceIDUsageDescription: 'This app uses Face ID for secure authentication.',
+        CFBundleURLTypes: [
+          {
+            CFBundleURLName: 'facebook',
+            CFBundleURLSchemes: [`fb${process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193'}`]
+          }
+        ]
       }
     },
     android: {
@@ -88,6 +94,18 @@ export default {
       permissions: [
         'USE_FINGERPRINT',
         'USE_BIOMETRIC'
+      ],
+      intentFilters: [
+        {
+          action: 'VIEW',
+          autoVerify: true,
+          data: [
+            {
+              scheme: `fb${process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193'}`
+            }
+          ],
+          category: ['BROWSABLE', 'DEFAULT']
+        }
       ]
     },
     web: {
@@ -98,6 +116,7 @@ export default {
     plugins: [
       'expo-router',
       '@react-native-firebase/app',
+      
       [
         'expo-local-authentication',
         {
@@ -123,7 +142,9 @@ export default {
       eas: {
         projectId: 'fd9dbaab-16ee-479d-b073-58043cf1b690'
       },
-      ENV: process.env.EXPO_PUBLIC_ENV || 'local'
+      ENV: process.env.EXPO_PUBLIC_ENV || 'local',
+      facebookAppId: process.env.EXPO_PUBLIC_FACEBOOK_APP_ID || '1283627919920193',
+      facebookDisplayName: appConfig.name
     }
   }
 };

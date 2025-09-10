@@ -84,7 +84,9 @@
 // }
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { persistor, store } from "@/redux/store";
-import firebase from "@react-native-firebase/app";
+import { Environment } from "@/utils/environment";
+import { getApps } from "@react-native-firebase/app";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   DarkTheme,
   DefaultTheme,
@@ -94,16 +96,16 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { useEffect, useState, useCallback } from "react";
+import { Text, View, ActivityIndicator } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-// Configure splash screen
+// Configure splash screen with optimized settings for faster startup
 SplashScreen.setOptions({
-  duration: 1000,
+  duration: 500, // Reduced from 1000ms for faster startup
   fade: true,
 });
 
@@ -113,6 +115,7 @@ export default function RootLayout() {
   const [firebaseInitialized, setFirebaseInitialized] = useState(false);
   const colorScheme = useColorScheme();
 
+  // Lazy load fonts for faster startup
   const [loaded] = useFonts({
     "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
     "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -121,44 +124,53 @@ export default function RootLayout() {
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
   });
 
-  useEffect(() => {
-    const initializeFirebase = async () => {
-      try {
-        // Check if Firebase is already initialized
-        if (firebase.apps.length === 0) {
-          console.log("Waiting for Firebase to initialize...");
-          // Firebase should auto-initialize with Expo
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        }
+  // Optimize Firebase initialization with useCallback
+  const initializeFirebase = useCallback(async () => {
+    try {
+      // Configure Google Sign-In with minimal config for faster startup
+      GoogleSignin.configure({
+        webClientId: Environment.GOOGLE_WEB_CLIENT_ID,
+        offlineAccess: false, // Set to false for faster initialization
+        hostedDomain: "",
+        forceCodeForRefreshToken: false, // Set to false for faster startup
+      });
 
-        console.log("Firebase apps:", firebase.apps.length);
-        if (firebase.apps.length > 0) {
-          console.log("✅ Firebase initialized successfully");
-          setFirebaseInitialized(true);
-        } else {
-          console.error("❌ Firebase not initialized, continuing anyway");
-          setFirebaseInitialized(true); // Allow app to continue even if Firebase fails
-        }
-      } catch (error) {
-        console.error("Firebase initialization error:", error);
-        setFirebaseInitialized(true); // Allow app to continue
+      console.log("✅ Google Sign-In configured");
+
+      // Quick Firebase check without delays
+      if (getApps().length === 0) {
+        // Reduced wait time for faster startup
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
-    };
 
-    initializeFirebase();
+      console.log("Firebase apps:", getApps().length);
+      setFirebaseInitialized(true);
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      setFirebaseInitialized(true); // Allow app to continue
+    }
   }, []);
 
   useEffect(() => {
+    initializeFirebase();
+  }, [initializeFirebase]);
+
+  // Hide splash screen as soon as possible
+  useEffect(() => {
     if (loaded && firebaseInitialized) {
-      SplashScreen.hide();
+      const timer = setTimeout(() => {
+        SplashScreen.hide();
+      }, 100); // Minimal delay
+      return () => clearTimeout(timer);
     }
   }, [loaded, firebaseInitialized]);
 
-  // Show loading while fonts or Firebase are loading
+  // Optimized loading component
   if (!loaded || !firebaseInitialized) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFCE1B" }}>
+        <ActivityIndicator size="large" color="#000" />
+        <Text style={{ marginTop: 10, color: "#000" }}>Loading...</Text>
       </View>
     );
   }
