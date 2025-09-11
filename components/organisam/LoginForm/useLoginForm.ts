@@ -210,7 +210,7 @@ export const useLoginForm = () => {
 
         // Navigate after a short delay to show the toast
         setTimeout(() => {
-          router.replace("/(private)/(tabs)/home");
+          router.replace("/(public)/auth-setup");
         }, 1500);
       }
     } catch (error: any) {

@@ -1,11 +1,11 @@
+import { clearAuth } from "@/redux/slices/AuthSlice";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import { useAuth } from "../../../../context/AuthContext";
 import useStyle from "./styles";
 
 function SettingsScreen() {
-  const { logout } = useAuth();
+
   const router = useRouter();
   const styles = useStyle();
 
@@ -16,7 +16,7 @@ function SettingsScreen() {
         text: "Logout",
         style: "destructive",
         onPress: async () => {
-          await logout();
+          await clearAuth();
           router.replace("/(public)/login");
         },
       },
