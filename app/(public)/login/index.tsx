@@ -5,7 +5,7 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Container showHeader={true} auth keyboardAvoiding showLoader={loading}>
+    <Container showHeader={false} auth keyboardAvoiding showLoader={loading}>
       <LoginForm />
     </Container>
   );

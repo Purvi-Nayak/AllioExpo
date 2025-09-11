@@ -25,6 +25,7 @@ const useStyle = () => {
       justifyContent: "center",
       paddingHorizontal: scale(10),
       paddingVertical: height * 0.1,
+    
     },
     logo: {
       width: scale(200),
