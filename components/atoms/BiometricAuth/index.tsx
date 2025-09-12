@@ -32,7 +32,6 @@ export const BiometricAuth: React.FC<BiometricAuthProps> = ({
     try {
       const info = await BiometricHelper.getBiometricInfo();
       setBiometricInfo(info);
-      console.log('✅ Biometric info:', info);
     } catch (error) {
       console.error('❌ Error checking biometric availability:', error);
       onError('Error checking biometric availability');

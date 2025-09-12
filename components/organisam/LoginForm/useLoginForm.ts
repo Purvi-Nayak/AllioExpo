@@ -126,7 +126,7 @@
 //   };
 // };
 
-import { setStateKey } from "@/redux/slices/AuthSlice";
+import { saveAuthData, setStateKey } from "@/redux/slices/AuthSlice";
 import { checkUserExistsByEmail } from "@/utils/helper";
 import { showError, showSuccess } from "@/utils/toastConfig";
 import useValidation from "@/utils/velidationSchema";
@@ -136,6 +136,7 @@ import {
   signInWithEmailAndPassword,
 } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import * as SecureStore from "expo-secure-store";
 
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -190,8 +191,6 @@ export const useLoginForm = () => {
         console.log("User logged in successfully:", user.uid);
 
         const idToken = await user.getIdToken();
-        dispatch(setStateKey({ key: "token", value: idToken }));
-
         const userDocRef = firestore().collection("users").doc(user.uid);
         const userDoc = await userDocRef.get();
         const userData = userDoc.data();
@@ -205,12 +204,31 @@ export const useLoginForm = () => {
           uid: user.uid,
         };
 
+        // Save to both Redux and Secure Storage
+        dispatch(setStateKey({ key: "token", value: idToken }));
         dispatch(setStateKey({ key: "userData", value: essentialUserData }));
+        
+        // Save to secure storage for persistence
+        await saveAuthData(idToken, essentialUserData);
+        
+        // Check if user already has authentication method set up
+        const existingAuthMethod = await SecureStore.getItemAsync("authMethod");
+        
         showSuccess("Login Successful!");
 
-        // Navigate after a short delay to show the toast
+        // Navigate based on whether user has already set up auth method
         setTimeout(() => {
-          router.replace("/(public)/auth-setup");
+          if (existingAuthMethod) {
+            // User has already set up auth method, go to verification
+            if (existingAuthMethod === "biometric") {
+              router.replace("/(public)/auth-biometric");
+            } else if (existingAuthMethod === "mpin") {
+              router.replace("/(public)/auth-mpin");
+            }
+          } else {
+            // New user or user who hasn't set up auth method yet, show setup
+            router.replace("/(public)/auth-setup");
+          }
         }, 1500);
       }
     } catch (error: any) {

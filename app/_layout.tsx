@@ -97,7 +97,6 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
@@ -105,7 +104,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 // Configure splash screen with optimized settings for faster startup
 SplashScreen.setOptions({
-  duration: 500, // Reduced from 1000ms for faster startup
+  duration: 1000, // Reduced from 1000ms for faster startup
   fade: true,
 });
 
@@ -135,7 +134,6 @@ export default function RootLayout() {
         forceCodeForRefreshToken: false, // Set to false for faster startup
       });
 
-      console.log("✅ Google Sign-In configured");
 
       // Quick Firebase check without delays
       if (getApps().length === 0) {
@@ -143,7 +141,6 @@ export default function RootLayout() {
         await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
-      console.log("Firebase apps:", getApps().length);
       setFirebaseInitialized(true);
     } catch (error) {
       console.error("Firebase initialization error:", error);
@@ -156,24 +153,24 @@ export default function RootLayout() {
   }, [initializeFirebase]);
 
   // Hide splash screen as soon as possible
-  useEffect(() => {
-    if (loaded && firebaseInitialized) {
-      const timer = setTimeout(() => {
-        SplashScreen.hide();
-      }, 100); // Minimal delay
-      return () => clearTimeout(timer);
-    }
-  }, [loaded, firebaseInitialized]);
+  // useEffect(() => {
+  //   if (loaded && firebaseInitialized) {
+  //     const timer = setTimeout(() => {
+  //       SplashScreen.hide();
+  //     }, 100); // Minimal delay
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [loaded, firebaseInitialized]);
 
   // Optimized loading component
-  if (!loaded || !firebaseInitialized) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFCE1B" }}>
-        <ActivityIndicator size="large" color="#000" />
-        <Text style={{ marginTop: 10, color: "#000" }}>Loading...</Text>
-      </View>
-    );
-  }
+  // if (!loaded || !firebaseInitialized) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFCE1B" }}>
+  //       <ActivityIndicator size="large" color="#000" />
+  //       <Text style={{ marginTop: 10, color: "#000" }}>Loading...</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

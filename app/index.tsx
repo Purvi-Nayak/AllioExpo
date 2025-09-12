@@ -77,7 +77,6 @@ import { hydrateAuth, loadAuthData, setAuthChecking } from "@/redux/slices/AuthS
 import { RootState } from "@/redux/store";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function IndexScreen() {
@@ -90,6 +89,7 @@ export default function IndexScreen() {
   } = useSelector((state: RootState) => state.auth);
   
   const [isLoading, setIsLoading] = useState(true);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -101,30 +101,31 @@ export default function IndexScreen() {
         dispatch(hydrateAuth(authData));
         
         // Small delay to ensure smooth transition
-        await new Promise((resolve) => setTimeout(resolve, 300));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       } catch (error) {
         console.error("Failed to load auth data:", error);
       } finally {
         setIsLoading(false);
+        setHasInitialized(true);
         dispatch(setAuthChecking(false));
       }
     };
 
-    initializeAuth();
-  }, [dispatch]);
+    if (!hasInitialized) {
+      initializeAuth();
+    }
+  }, [dispatch, hasInitialized]);
 
   useEffect(() => {
-    if (!isLoading && !isCheckingAuth) {
+    if (!isLoading && !isCheckingAuth && hasInitialized) {
+      
       if (isAuthenticated && token) {
-        if (hasSetupSecurity) {
+        if (hasSetupSecurity && authMethod) {
           // User has set up security, go to verification screen
           if (authMethod === "biometric") {
             router.replace("/(public)/auth-biometric");
           } else if (authMethod === "mpin") {
             router.replace("/(public)/auth-mpin");
-          } else {
-            // Fallback - shouldn't happen but go to setup
-            router.replace("/(public)/auth-setup");
           }
         } else {
           // User is logged in but hasn't set up security
@@ -135,17 +136,17 @@ export default function IndexScreen() {
         router.replace("/(public)/login");
       }
     }
-  }, [isAuthenticated, token, hasSetupSecurity, authMethod, isLoading, isCheckingAuth, router]);
+  }, [isAuthenticated, token, hasSetupSecurity, authMethod, isLoading, isCheckingAuth, hasInitialized, router]);
 
   // Show loading screen while checking authentication
-  return (
-    <View style={{ 
-      flex: 1, 
-      justifyContent: "center", 
-      alignItems: "center",
-      backgroundColor: "#FFCE1B" 
-    }}>
-      <ActivityIndicator size="large" color="#000" />
-    </View>
-  );
+  // return (
+  //   // <View style={{ 
+  //   //   flex: 1, 
+  //   //   justifyContent: "center", 
+  //   //   alignItems: "center",
+  //   //   backgroundColor: "#FFCE1B" 
+  //   // }}>
+  //   //   <ActivityIndicator size="large" color="#000" />
+  //   // </View>
+  // );
 }

@@ -15,6 +15,8 @@ const WEB_CLIENT_ID = Environment.GOOGLE_WEB_CLIENT_ID;
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
+const API_URL = 'https://allio-app-bxwta.ondigitalocean.app/api';
+
 // Use environment-based API URL instead of hardcoded
 const BASE_URL = Environment.API_BASE_URL;
 
@@ -92,6 +94,7 @@ const LICENSE_KEY =
   ];
 
 export {
+  API_URL,
   BASE_URL, CARD_WIDTH, FeaturesDataItem,
   LICENSE_KEY, onboardingData, SPACING, WEB_CLIENT_ID
 };

@@ -68,12 +68,7 @@ function checkDependencies() {
 
 // Performance recommendations
 function showRecommendations() {
-  console.log('\n🎯 Performance Recommendations:');
-  console.log('   1. Use npm run start:fast for development');
-  console.log('   2. Enable Hermes engine (already configured)');
-  console.log('   3. Use npm run clean:cache if issues persist');
-  console.log('   4. Close unnecessary browser tabs');
-  console.log('   5. Restart Metro bundler periodically');
+
   
   // Check if Metro cache exists
   if (fs.existsSync('.metro-cache')) {

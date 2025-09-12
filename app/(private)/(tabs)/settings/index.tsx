@@ -1,12 +1,13 @@
-import { clearAuth } from "@/redux/slices/AuthSlice";
+import { clearAuth, clearAuthData } from "@/redux/slices/AuthSlice";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch } from "react-redux";
 import useStyle from "./styles";
 
 function SettingsScreen() {
-
   const router = useRouter();
+  const dispatch = useDispatch();
   const styles = useStyle();
 
   const handleLogout = () => {
@@ -16,8 +17,14 @@ function SettingsScreen() {
         text: "Logout",
         style: "destructive",
         onPress: async () => {
-          await clearAuth();
-          router.replace("/(public)/login");
+          try {
+            // Clear both Redux state and secure storage
+            await clearAuthData();
+            dispatch(clearAuth());
+            router.replace("/(public)/login");
+          } catch (error) {
+            console.error("Logout error:", error);
+          }
         },
       },
     ]);
