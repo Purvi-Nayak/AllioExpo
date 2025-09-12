@@ -127,7 +127,7 @@
 // };
 
 import { saveAuthData, setStateKey } from "@/redux/slices/AuthSlice";
-import { checkUserExistsByEmail } from "@/utils/helper";
+import { checkUserExistsByEmail, getUserAuthPreferences } from "@/utils/helper";
 import { showError, showSuccess } from "@/utils/toastConfig";
 import useValidation from "@/utils/velidationSchema";
 import firebase from "@react-native-firebase/app";
@@ -211,18 +211,30 @@ export const useLoginForm = () => {
         // Save to secure storage for persistence
         await saveAuthData(idToken, essentialUserData);
         
-        // Check if user already has authentication method set up
-        const existingAuthMethod = await SecureStore.getItemAsync("authMethod");
+        // Get auth preferences from Firestore
+        const authPreferences = await getUserAuthPreferences(user.uid);
+        console.log("User auth preferences from Firestore:", authPreferences);
+        
+        // Save auth preferences to secure storage for offline access
+        if (authPreferences.authMethod) {
+          await SecureStore.setItemAsync("authMethod", authPreferences.authMethod);
+          console.log("Saved auth method to secure storage:", authPreferences.authMethod);
+        }
+        
+        if (authPreferences.mpin && authPreferences.mpinSet) {
+          await SecureStore.setItemAsync("userMPIN", authPreferences.mpin);
+          console.log("Saved MPIN to secure storage");
+        }
         
         showSuccess("Login Successful!");
 
-        // Navigate based on whether user has already set up auth method
+        // Navigate based on auth preferences from Firestore
         setTimeout(() => {
-          if (existingAuthMethod) {
+          if (authPreferences.authMethod && authPreferences.mpinSet) {
             // User has already set up auth method, go to verification
-            if (existingAuthMethod === "biometric") {
+            if (authPreferences.authMethod === "biometric") {
               router.replace("/(public)/auth-biometric");
-            } else if (existingAuthMethod === "mpin") {
+            } else if (authPreferences.authMethod === "mpin") {
               router.replace("/(public)/auth-mpin");
             }
           } else {

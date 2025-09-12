@@ -1,19 +1,20 @@
 import { useTheme } from "@/constants/Colors";
 import {
-  saveAuthMethod,
-  setBiometricAvailability,
-  setSecurityMethod
+    saveAuthMethod,
+    setBiometricAvailability,
+    setSecurityMethod
 } from "@/redux/slices/AuthSlice";
 import { RootState } from "@/redux/store";
+import { updateUserAuthPreferences } from "@/utils/helper";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
-  Alert,
-  Pressable,
-  SafeAreaView,
-  Text,
-  View,
+    Alert,
+    Pressable,
+    SafeAreaView,
+    Text,
+    View,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -23,7 +24,7 @@ const AuthSetupScreen = () => {
   const theme = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { hasBiometric } = useSelector((state: RootState) => state.auth);
+  const { hasBiometric, userData } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -63,6 +64,16 @@ const AuthSetupScreen = () => {
       if (result.success) {
         dispatch(setSecurityMethod("biometric"));
         await saveAuthMethod("biometric");
+        
+        // Save to Firestore
+        if (userData?.uid) {
+          await updateUserAuthPreferences(userData.uid, {
+            authMethod: "biometric",
+            mpinSet: true, // User has completed auth setup
+          });
+          console.log("Biometric auth method saved to Firestore");
+        }
+        
         Alert.alert(
           "Success",
           "Biometric authentication has been set up successfully!",

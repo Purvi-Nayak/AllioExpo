@@ -4,6 +4,8 @@ import {
   saveMPIN,
   setSecurityMethod
 } from "@/redux/slices/AuthSlice";
+import { RootState } from "@/redux/store";
+import { encryptMPIN, updateUserAuthPreferences } from "@/utils/helper";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -13,7 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { styles } from "./styles";
 
@@ -21,6 +23,7 @@ const SetupMPINScreen = () => {
   const theme = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
+  const { userData } = useSelector((state: RootState) => state.auth);
   const [mpin, setMpin] = useState("");
   const [confirmMpin, setConfirmMpin] = useState("");
   const [step, setStep] = useState<"enter" | "confirm">("enter");
@@ -71,9 +74,22 @@ const SetupMPINScreen = () => {
 
     setIsLoading(true);
     try {
-      await saveMPIN(mpin);
+      // Encrypt MPIN before saving
+      const encryptedMPIN = encryptMPIN(mpin);
+      
+      await saveMPIN(encryptedMPIN);
       await saveAuthMethod("mpin");
       dispatch(setSecurityMethod("mpin"));
+      
+      // Save encrypted MPIN to Firestore
+      if (userData?.uid) {
+        await updateUserAuthPreferences(userData.uid, {
+          mpin: encryptedMPIN,
+          mpinSet: true,
+          authMethod: "mpin",
+        });
+        console.log("Encrypted MPIN saved to Firestore");
+      }
       
       // Auto-navigate to home page without alert
       router.replace("/(private)/(tabs)/home");

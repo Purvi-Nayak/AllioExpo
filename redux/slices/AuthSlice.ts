@@ -295,8 +295,16 @@ export const loadAuthData = async (): Promise<Partial<AuthState>> => {
 
 export const verifyMPIN = async (inputMPIN: string): Promise<boolean> => {
   try {
-    const storedMPIN = await SecureStore.getItemAsync("userMPIN");
-    return storedMPIN === inputMPIN;
+    const storedEncryptedMPIN = await SecureStore.getItemAsync("userMPIN");
+    if (!storedEncryptedMPIN) {
+      return false;
+    }
+    
+    // Import encryption function
+    const { encryptMPIN } = await import("@/utils/helper");
+    const encryptedInput = encryptMPIN(inputMPIN);
+    
+    return storedEncryptedMPIN === encryptedInput;
   } catch (err) {
     console.error("Failed to verify MPIN:", err);
     return false;

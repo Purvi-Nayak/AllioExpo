@@ -20,6 +20,9 @@ config.resolver = {
   ...config.resolver,
   resolverMainFields: ['react-native', 'browser', 'main'],
   platforms: ['ios', 'android', 'native', 'web'],
+  alias: {
+    buffer: require.resolve('buffer'),
+  },
 };
 
 // Enable concurrent transformations for faster builds

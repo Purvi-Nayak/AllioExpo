@@ -156,8 +156,8 @@ import { showError, showSuccess } from "@/utils/toastConfig";
 import useValidation from "@/utils/velidationSchema";
 import firebase from "@react-native-firebase/app";
 import {
-  createUserWithEmailAndPassword,
-  getAuth,
+    createUserWithEmailAndPassword,
+    getAuth,
 } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import { useRouter } from "expo-router";
@@ -246,6 +246,10 @@ const useRegisterForm = () => {
         mobileNo: values.mobileNo.trim(),
         profileImage: "",
         uid: user.uid,
+        // Initialize MPIN fields for new users
+        mpin: null,
+        mpinSet: false,
+        authMethod: null,
       };
 
       // Save to Firestore

@@ -82,22 +82,7 @@ const AuthMPINScreen = () => {
   };
 
   const handleForgotMPIN = () => {
-    Alert.alert(
-      "Reset MPIN",
-      "To reset your MPIN, please use biometric authentication or logout and login again.",
-      [
-        {
-          text: "Use Biometric",
-          onPress: () => router.replace("/(public)/auth-biometric"),
-        },
-        {
-          text: "Logout",
-          onPress: () => router.replace("/(public)/login"),
-          style: "destructive",
-        },
-        { text: "Cancel", style: "cancel" },
-      ]
-    );
+    router.push("/(public)/forget-mpin");
   };
 
   const renderDots = () => {
