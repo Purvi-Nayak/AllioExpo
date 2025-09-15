@@ -1,3 +1,4 @@
+import { setNewMpin } from "@/api";
 import { useTheme } from "@/constants/Colors";
 import {
   saveAuthMethod,
@@ -5,8 +6,8 @@ import {
   setSecurityMethod
 } from "@/redux/slices/AuthSlice";
 import { RootState } from "@/redux/store";
-import { encryptMPIN, updateUserAuthPreferences } from "@/utils/helper";
-import { useRouter } from "expo-router";
+import { encryptMPIN, updateUserAuthPreferences, updateUserAuthPreferencesByEmail } from "@/utils/helper";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   Alert,
@@ -28,6 +29,11 @@ const SetupMPINScreen = () => {
   const [confirmMpin, setConfirmMpin] = useState("");
   const [step, setStep] = useState<"enter" | "confirm">("enter");
   const [isLoading, setIsLoading] = useState(false);
+
+  // Get params to check if this is a reset flow
+  const params = useLocalSearchParams<{ email?: string; isReset?: string }>();
+  const isResetFlow = params.isReset === "true";
+  const email = params.email;
 
   const handleDigitPress = (digit: string) => {
     if (step === "enter") {
@@ -77,22 +83,59 @@ const SetupMPINScreen = () => {
       // Encrypt MPIN before saving
       const encryptedMPIN = encryptMPIN(mpin);
       
-      await saveMPIN(encryptedMPIN);
-      await saveAuthMethod("mpin");
-      dispatch(setSecurityMethod("mpin"));
-      
-      // Save encrypted MPIN to Firestore
-      if (userData?.uid) {
-        await updateUserAuthPreferences(userData.uid, {
-          mpin: encryptedMPIN,
-          mpinSet: true,
-          authMethod: "mpin",
+      if (isResetFlow && email) {
+        // Reset flow: Call API to update MPIN and update Firestore by email
+        const response = await setNewMpin({
+          email,
+          newMpin: encryptedMPIN
         });
-        console.log("Encrypted MPIN saved to Firestore");
+
+        if (response.data?.status === "true") {
+          // Update Firestore by email for reset flow
+          await updateUserAuthPreferencesByEmail(email, {
+            mpin: encryptedMPIN,
+            mpinSet: true,
+            authMethod: "mpin"
+          });
+          
+          // Clear any existing auth data since this is a reset
+          const { clearAuthData } = await import("@/redux/slices/AuthSlice");
+          await clearAuthData();
+
+          Alert.alert(
+            "Success", 
+            "Your MPIN has been updated successfully!", 
+            [
+              {
+                text: "OK",
+                onPress: () => {
+                  router.replace("/login");
+                }
+              }
+            ]
+          );
+        } else {
+          Alert.alert("Error", response.data?.message || response.data?.error || "Failed to update MPIN. Please try again.");
+        }
+      } else {
+        // Normal setup flow: Save to local storage and current user's Firestore
+        await saveMPIN(encryptedMPIN);
+        await saveAuthMethod("mpin");
+        dispatch(setSecurityMethod("mpin"));
+        
+        // Save encrypted MPIN to Firestore for current user
+        if (userData?.uid) {
+          await updateUserAuthPreferences(userData.uid, {
+            mpin: encryptedMPIN,
+            mpinSet: true,
+            authMethod: "mpin",
+          });
+          console.log("Encrypted MPIN saved to Firestore");
+        }
+        
+        // Auto-navigate to home page without alert
+        router.replace("/(private)/(tabs)/home");
       }
-      
-      // Auto-navigate to home page without alert
-      router.replace("/(private)/(tabs)/home");
     } catch (error) {
       console.error("MPIN setup error:", error);
       Alert.alert("Error", "Failed to set up MPIN. Please try again.");
@@ -181,11 +224,17 @@ const SetupMPINScreen = () => {
 
       <View style={styles.content}>
         <Text style={[styles.title, { color: theme.text }]}>
-          {step === "enter" ? "Set Your MPIN" : "Confirm Your MPIN"}
+          {step === "enter" 
+            ? (isResetFlow ? "Set New MPIN" : "Set Your MPIN")
+            : "Confirm Your MPIN"
+          }
         </Text>
         <Text style={[styles.subtitle, { color: theme.gray }]}>
           {step === "enter" 
-            ? "Create a 4-digit PIN for secure access" 
+            ? (isResetFlow 
+                ? "Create a new 4-digit PIN for your account" 
+                : "Create a 4-digit PIN for secure access"
+              )
             : "Enter your PIN again to confirm"
           }
         </Text>

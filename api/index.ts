@@ -88,3 +88,13 @@ const api = {
 };
 
 export default api;
+
+// Export individual functions for easier use
+export const sendOtp = (data: { email: string }) => 
+  api.MPIN.sendOtp({ data });
+
+export const validateOtp = (data: { email: string; otp: string }) => 
+  api.MPIN.validateOtp({ data });
+
+export const setNewMpin = (data: { email: string; newMpin: string }) => 
+  api.MPIN.setNewMpin({ data });

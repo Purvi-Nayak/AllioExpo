@@ -211,10 +211,10 @@ import Text from "@components/atoms/Text";
 import { Formik } from "formik";
 import React from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  View,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import useStyle from "./style";
@@ -250,7 +250,7 @@ const ForgotPasswordForm: React.FC = () => {
                 Forgot Password
               </Text>
               <Text style={styles.subtitle}>
-                Enter your email to receive a password reset link
+                Enter your email to receive an OTP for password reset
               </Text>
               <Input
                 label="Email"
@@ -263,7 +263,7 @@ const ForgotPasswordForm: React.FC = () => {
                 autoCapitalize="none"
               />
               <Button
-                title={loading ? "Sending..." : "Send Reset Link"}
+                title={loading ? "Sending..." : "Send OTP"}
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}
