@@ -122,7 +122,7 @@
 
 // export default Input;
 // components/ui/Input/index.tsx
-import { useTheme } from "@/constants/Colors"; // Use your custom hook
+import { useTheme } from "@/constants/Colors";
 import React, { useState } from "react";
 import {
   Image,
@@ -130,6 +130,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
 } from "react-native";
 import { ICONS } from "../../../assets";
 import Text from "../Text";
@@ -177,12 +178,20 @@ const Input: React.FC<InputProps> = ({
   errorStyle,
   ...props
 }) => {
-  const colors = useTheme(); // Your custom hook returns the theme directly
+  const colors = useTheme();
   const styles = useStyle();
   const [isFocused, setIsFocused] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const hasError = Boolean(error && touched);
+
+  // Web-specific styles to remove default browser outline
+  const webInputStyle =
+    Platform.OS === "web"
+      ? {
+          outline: "none",
+        }
+      : {};
 
   return (
     <View style={[styles.wrapper, containerStyle]}>
@@ -200,6 +209,7 @@ const Input: React.FC<InputProps> = ({
           style={[
             styles.textInput,
             multiline && styles.textInputMultiline,
+            webInputStyle, // Apply web-specific styles
             inputStyle,
           ]}
           value={value}
