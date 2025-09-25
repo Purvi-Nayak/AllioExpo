@@ -75,7 +75,9 @@ export const signInWithEmailAndPassword = async (
 
   try {
     if (isWeb) {
-      const { signInWithEmailAndPassword: webSignIn } = require("firebase/auth");
+      const {
+        signInWithEmailAndPassword: webSignIn,
+      } = require("firebase/auth");
       const userCredential = await webSignIn(webServices.auth, email, password);
       return userCredential.user as AuthUser;
     } else {
@@ -99,8 +101,14 @@ export const createUserWithEmailAndPassword = async (
 
   try {
     if (isWeb) {
-      const { createUserWithEmailAndPassword: webCreateUser } = require("firebase/auth");
-      const userCredential = await webCreateUser(webServices.auth, email, password);
+      const {
+        createUserWithEmailAndPassword: webCreateUser,
+      } = require("firebase/auth");
+      const userCredential = await webCreateUser(
+        webServices.auth,
+        email,
+        password
+      );
       return userCredential.user as AuthUser;
     } else {
       const userCredential = await mobileServices
@@ -120,7 +128,9 @@ export const sendPasswordResetEmail = async (email: string): Promise<void> => {
 
   try {
     if (isWeb) {
-      const { sendPasswordResetEmail: webSendPasswordReset } = require("firebase/auth");
+      const {
+        sendPasswordResetEmail: webSendPasswordReset,
+      } = require("firebase/auth");
       await webSendPasswordReset(webServices.auth, email);
     } else {
       await mobileServices.auth().sendPasswordResetEmail(email);
@@ -149,7 +159,9 @@ export const signOut = async (): Promise<void> => {
 };
 
 // Auth state listener
-export const onAuthStateChanged = (callback: (user: AuthUser | null) => void) => {
+export const onAuthStateChanged = (
+  callback: (user: AuthUser | null) => void
+) => {
   if (!isInitialized) {
     console.warn("⚠️ AuthService not initialized yet for onAuthStateChanged");
     return () => {}; // Return empty unsubscribe function
@@ -157,7 +169,9 @@ export const onAuthStateChanged = (callback: (user: AuthUser | null) => void) =>
 
   try {
     if (isWeb) {
-      const { onAuthStateChanged: webOnAuthStateChanged } = require("firebase/auth");
+      const {
+        onAuthStateChanged: webOnAuthStateChanged,
+      } = require("firebase/auth");
       return webOnAuthStateChanged(webServices.auth, callback as any);
     } else {
       return mobileServices.auth().onAuthStateChanged(callback as any);
@@ -169,7 +183,9 @@ export const onAuthStateChanged = (callback: (user: AuthUser | null) => void) =>
 };
 
 // Get user document from Firestore
-export const getUserDocument = async (uid: string): Promise<UserData | null> => {
+export const getUserDocument = async (
+  uid: string
+): Promise<UserData | null> => {
   await ensureInitialized();
 
   try {
@@ -218,19 +234,28 @@ export const setUserDocument = async (
 };
 
 // Check if user exists by email
-export const checkUserExistsByEmail = async (email: string): Promise<boolean> => {
+export const checkUserExistsByEmail = async (
+  email: string
+): Promise<boolean> => {
   await ensureInitialized();
 
   try {
     console.log(`🔍 [${Platform.OS}] Checking user existence for: "${email}"`);
 
     if (isWeb) {
-      const { collection, query, where, getDocs } = require("firebase/firestore");
+      const {
+        collection,
+        query,
+        where,
+        getDocs,
+      } = require("firebase/firestore");
       const usersRef = collection(webServices.db, "users");
       const q = query(usersRef, where("email", "==", email));
       const querySnapshot = await getDocs(q);
 
-      console.log(`📊 [Web] Query results: ${querySnapshot.size} documents found`);
+      console.log(
+        `📊 [Web] Query results: ${querySnapshot.size} documents found`
+      );
 
       // Debug: Log all documents in the query result
       querySnapshot.forEach((doc) => {
@@ -245,7 +270,9 @@ export const checkUserExistsByEmail = async (email: string): Promise<boolean> =>
         .where("email", "==", email)
         .get();
 
-      console.log(`📊 [Mobile] Query results: ${querySnapshot.size} documents found`);
+      console.log(
+        `📊 [Mobile] Query results: ${querySnapshot.size} documents found`
+      );
 
       // Debug: Log all documents in the query result
       querySnapshot.forEach((doc) => {

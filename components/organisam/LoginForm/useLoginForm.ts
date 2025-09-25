@@ -208,14 +208,19 @@ export const useLoginForm = () => {
       const user: AuthUser = await signInWithEmailAndPassword(email, password);
 
       if (user) {
-        console.log(`✅ User logged in successfully: ${user.uid} on ${Platform.OS}`);
+        console.log(
+          `✅ User logged in successfully: ${user.uid} on ${Platform.OS}`
+        );
 
         const idToken = await user.getIdToken();
         console.log("✅ ID Token retrieved successfully");
 
         // Get user data from Firestore using platform-specific service
         const userData = await getUserDocument(user.uid);
-        console.log("✅ User data retrieved:", userData ? "Success" : "No data found");
+        console.log(
+          "✅ User data retrieved:",
+          userData ? "Success" : "No data found"
+        );
 
         const essentialUserData = {
           email: userData?.email || email,
@@ -261,7 +266,8 @@ export const useLoginForm = () => {
         case "auth/wrong-password":
         case "auth/invalid-credential":
         case "auth/invalid-login-credentials":
-          errorMessage = "Invalid credentials. Please check your email and password.";
+          errorMessage =
+            "Invalid credentials. Please check your email and password.";
           break;
         case "auth/invalid-email":
           errorMessage = "Invalid email address format.";
@@ -277,7 +283,8 @@ export const useLoginForm = () => {
           break;
         default:
           if (error.message?.includes("Firebase not initialized")) {
-            errorMessage = "App is still loading. Please try again in a moment.";
+            errorMessage =
+              "App is still loading. Please try again in a moment.";
           } else {
             console.error("Unhandled auth error:", error.code, error.message);
             errorMessage = `Authentication failed: ${error.message}`;

@@ -9,7 +9,7 @@ import firestore, {
 import { Buffer } from "buffer";
 import { Dimensions, Platform } from "react-native";
 import { authService } from "./authService";
-import { checkUserExistsByEmail as checkUserExists } from './authService';
+import { checkUserExistsByEmail as checkUserExists } from "./authService";
 
 const height = Dimensions.get("screen").height;
 const width = Dimensions.get("screen").width;
@@ -31,12 +31,18 @@ export const compareMPIN = (
   return encryptedInput === encryptedMpin;
 };
 
-export const checkUserExistsByEmail = async (email: string): Promise<boolean> => {
+export const checkUserExistsByEmail = async (
+  email: string
+): Promise<boolean> => {
   try {
-    console.log(`🔍 [Helper] Checking user existence for: ${email} on ${require('react-native').Platform.OS}`);
+    console.log(
+      `🔍 [Helper] Checking user existence for: ${email} on ${
+        require("react-native").Platform.OS
+      }`
+    );
     return await checkUserExists(email);
   } catch (error) {
-    console.error('❌ [Helper] Error checking user existence:', error);
+    console.error("❌ [Helper] Error checking user existence:", error);
     return false;
   }
 };
