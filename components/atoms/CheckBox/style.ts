@@ -1,36 +1,37 @@
-import { useTheme } from "@react-navigation/native";
+import { useTheme } from "@/constants/Colors";
+import responsive from "@utils/responsive";
 import { StyleSheet } from "react-native";
-import { scale } from "react-native-size-matters";
 
 const useStyle = () => {
-  const { colors } = useTheme();
+  const colors = useTheme();
+
   return StyleSheet.create({
     container: {
       flexDirection: "row",
       alignItems: "center",
-      marginVertical: scale(5),
+      marginVertical: responsive.verticalScale(5),
     },
     circle: {
-      width: scale(18),
-      height: scale(18),
-      borderRadius: 4,
+      width: responsive.moderateScale(18),
+      height: responsive.moderateScale(18),
+      borderRadius: responsive.moderateScale(4),
       borderWidth: 1,
       borderColor: colors.gray,
       alignItems: "center",
       justifyContent: "center",
-      marginRight: scale(8),
+      marginRight: responsive.moderateScale(8),
     },
     selectedCircle: {
       backgroundColor: colors.primary,
       borderColor: colors.primary,
     },
     checkIcon: {
-      width: scale(12),
-      height: scale(12),
+      width: responsive.moderateScale(12),
+      height: responsive.moderateScale(12),
       tintColor: colors.white,
     },
     label: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
       color: colors.text,
     },
   });

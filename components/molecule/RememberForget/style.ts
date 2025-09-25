@@ -1,20 +1,23 @@
-import { useTheme } from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
-
+import { useTheme } from "@/constants/Colors";
+import responsive from "@utils/responsive";
+import { StyleSheet } from "react-native";
 
 const useStyle = () => {
-  const  colors  = useTheme();
+  const colors = useTheme();
+
   return StyleSheet.create({
     rememberForgotView: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginVertical: responsive.verticalScale(8),
+      paddingHorizontal: responsive.width(2),
     },
     forgotpassText: {
       color: colors.text,
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
     },
   });
 };
+
 export default useStyle;

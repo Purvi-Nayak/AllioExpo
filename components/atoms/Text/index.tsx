@@ -1,5 +1,3 @@
-// components/ui/Text.tsx
-
 import React from "react";
 import {
   GestureResponderEvent,

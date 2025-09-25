@@ -1,106 +1,29 @@
-// import { useTheme } from "@/constants/Colors";
-// import { StyleSheet } from "react-native";
-// import { scale } from "react-native-size-matters";
-// import { FONTS } from "../../../assets";
-
-// const useStyle = () => {
-//   const colors = useTheme(); // Your custom hook returns the theme directly
-//   return StyleSheet.create({
-//     wrapper: {
-//       marginBottom: scale(16),
-//     },
-//     label: {
-//       fontSize: scale(14),
-//       color: colors.text,
-//       marginBottom: scale(4),
-//       fontFamily: FONTS.medium,
-//     },
-//     inputContainer: {
-//       flexDirection: "row",
-//       alignItems: "center",
-//       borderWidth: 1,
-//       borderColor: colors.gray,
-//       borderRadius: scale(10),
-//       backgroundColor: colors.background,
-//       minHeight: scale(45),
-//     },
-//     inputContainerFocused: {
-//       borderColor: colors.primary,
-//       borderWidth: 2,
-//     },
-//     inputContainerError: {
-//       borderColor: colors.error,
-//     },
-//     inputContainerDisabled: {
-//       backgroundColor: colors.lightgray,
-//       borderColor: colors.gray,
-//     },
-//     textInput: {
-//       flex: 1,
-//       fontSize: scale(14),
-//       fontFamily: FONTS.regular,
-//       color: colors.text,
-//       paddingHorizontal: scale(12),
-//       paddingVertical: scale(12),
-//     },
-//     textInputMultiline: {
-//       paddingTop: scale(12),
-//       textAlignVertical: "top",
-//     },
-//     passwordToggle: {
-//       padding: scale(12),
-//     },
-//     icon: {
-//       width: scale(20),
-//       height: scale(20),
-//       tintColor: colors.gray,
-//     },
-//     errorContainer: {
-//    borderColor: colors.error,
-//    marginLeft: scale(4),
-//     },
-//     errorText: {
-//       fontSize: scale(12),
-//       color: colors.error,
-//       marginTop: scale(4),
-//       fontFamily: FONTS.regular,
-//     },
-//     counterText: {
-//       fontSize: scale(12),
-//       color: colors.gray,
-//       textAlign: "right",
-     
-//       fontFamily: FONTS.regular,
-//     },
-//   });
-// };
-
-// export default useStyle;
-import { FONTS } from '@/assets';
-import { useTheme } from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
-
+import { FONTS } from "@/assets";
+import { useTheme } from "@/constants/Colors";
+import responsive from "@utils/responsive";
+import { Platform, StyleSheet } from "react-native";
 
 const useStyle = () => {
-  const  colors  = useTheme();
-  return StyleSheet.create({
-    wrapper:{
+  const colors = useTheme();
 
+  return StyleSheet.create({
+    wrapper: {
+      width: "100%",
     },
     label: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.text,
-      marginBottom: scale(4),
+      marginBottom: responsive.verticalScale(4),
     },
     inputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       borderWidth: 1,
       borderColor: colors.text,
-      borderRadius: scale(10),
+      borderRadius: responsive.moderateScale(10),
       backgroundColor: colors.background,
-      minHeight: scale(45),
+      minHeight: responsive.verticalScale(45),
+      paddingHorizontal: responsive.moderateScale(10),
     },
     inputContainerFocused: {
       borderColor: colors.primary,
@@ -115,40 +38,46 @@ const useStyle = () => {
     },
     textInput: {
       flex: 1,
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       fontFamily: FONTS.regular,
       color: colors.text,
-      paddingHorizontal: scale(12),
-      paddingVertical: scale(12),
+      paddingHorizontal: responsive.moderateScale(12),
+      paddingVertical:
+        Platform.OS === "ios"
+          ? responsive.verticalScale(12)
+          : responsive.verticalScale(8),
     },
     textInputMultiline: {
-      paddingTop: scale(12),
-      textAlignVertical: 'top',
+      paddingTop: responsive.verticalScale(12),
+      textAlignVertical: "top",
     },
     passwordToggle: {
-      padding: 12,
+      padding: responsive.moderateScale(12),
+      justifyContent: "center",
+      alignItems: "center",
     },
     errorContainer: {
-      marginLeft: scale(4),
+      marginLeft: responsive.moderateScale(4),
+      marginTop: responsive.verticalScale(2),
     },
     icon: {
-      width: scale(20),
-      height: scale(20),
+      width: responsive.moderateScale(20),
+      height: responsive.moderateScale(20),
       tintColor: colors.primary,
+      resizeMode: "contain",
     },
     passwordToggleText: {
-      fontSize: scale(18),
+      fontSize: responsive.moderateScale(18),
     },
     errorText: {
-      fontSize: scale(12),
+      fontSize: responsive.moderateScale(12),
       color: colors.error,
-      marginTop: 4,
     },
     counterText: {
-      fontSize: scale(12),
+      fontSize: responsive.moderateScale(12),
       color: colors.gray,
-      textAlign: 'right',
-      marginTop: scale(4),
+      textAlign: "right",
+      marginTop: responsive.verticalScale(4),
     },
     placeHolderColor: {
       color: colors.gray,
@@ -157,4 +86,3 @@ const useStyle = () => {
 };
 
 export default useStyle;
-

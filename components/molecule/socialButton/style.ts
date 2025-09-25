@@ -1,32 +1,32 @@
-import { useTheme } from '@/constants/Colors';
-import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
-
+import { useTheme } from "@/constants/Colors";
+import responsive from "@utils/responsive";
+import { StyleSheet } from "react-native";
 
 const useStyle = () => {
-  const  colors  = useTheme();
+  const colors = useTheme();
+
   return StyleSheet.create({
     button: {
-      marginHorizontal: scale(8),
-      borderRadius: scale(20),
-      padding: scale(6),
+      marginHorizontal: responsive.moderateScale(8),
+      borderRadius: responsive.moderateScale(20),
+      padding: responsive.moderateScale(6),
       backgroundColor: colors.white,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       elevation: 2,
       shadowColor: colors.black,
-      shadowOffset: { width: 0, height: 1 },
+      shadowOffset: { width: 0, height: responsive.verticalScale(1) },
       shadowOpacity: 0.1,
-      shadowRadius: 2,
+      shadowRadius: responsive.moderateScale(2),
     },
     pressed: {
       backgroundColor: colors.hoverColor,
       opacity: 0.8,
     },
     icon: {
-      width: scale(32),
-      height: scale(32),
-      resizeMode: 'contain',
+      width: responsive.moderateScale(32),
+      height: responsive.moderateScale(32),
+      resizeMode: "contain",
     },
   });
 };

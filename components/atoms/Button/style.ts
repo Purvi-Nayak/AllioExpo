@@ -1,41 +1,38 @@
-// components/ui/Button/style.ts
 import { useTheme } from "@/constants/Colors";
-import { Dimensions, StyleSheet } from "react-native";
-import { scale } from "react-native-size-matters";
+import responsive from "@utils/responsive";
+import { StyleSheet } from "react-native";
 import { FONTS } from "../../../assets";
-
-const { width } = Dimensions.get("window");
 
 const useStyle = () => {
   const colors = useTheme();
 
   return StyleSheet.create({
     button: {
-      borderRadius: scale(10),
+      borderRadius: responsive.moderateScale(10),
       alignItems: "center",
       justifyContent: "center",
       flexDirection: "row",
-      minHeight: scale(45),
-      paddingHorizontal: scale(16),
+      minHeight: responsive.verticalScale(45),
+      paddingHorizontal: responsive.moderateScale(16),
     },
 
     // Size variants
     smallButton: {
-      minHeight: scale(36),
-      paddingHorizontal: scale(12),
-      paddingVertical: scale(8),
+      minHeight: responsive.verticalScale(36),
+      paddingHorizontal: responsive.moderateScale(12),
+      paddingVertical: responsive.verticalScale(8),
     },
 
     mediumButton: {
-      minHeight: scale(45),
-      paddingHorizontal: scale(16),
-      paddingVertical: scale(12),
+      minHeight: responsive.verticalScale(45),
+      paddingHorizontal: responsive.moderateScale(16),
+      paddingVertical: responsive.verticalScale(12),
     },
 
     largeButton: {
-      minHeight: scale(54),
-      paddingHorizontal: scale(20),
-      paddingVertical: scale(16),
+      minHeight: responsive.verticalScale(54),
+      paddingHorizontal: responsive.moderateScale(20),
+      paddingVertical: responsive.verticalScale(16),
     },
 
     content: {
@@ -51,15 +48,15 @@ const useStyle = () => {
 
     // Text size variants
     smallText: {
-      fontSize: scale(12),
+      fontSize: responsive.moderateScale(12),
     },
 
     mediumText: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
     },
 
     largeText: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
     },
 
     icon: {
@@ -68,18 +65,17 @@ const useStyle = () => {
     },
 
     prefixIcon: {
-      marginRight: scale(8),
+      marginRight: responsive.moderateScale(8),
     },
 
     postfixIcon: {
-      marginLeft: scale(8),
+      marginLeft: responsive.moderateScale(8),
     },
 
     disabled: {
       opacity: 0.5,
     },
 
-    // Loading state
     loading: {
       opacity: 0.7,
     },
