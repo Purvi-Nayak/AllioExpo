@@ -84,9 +84,7 @@
 // }
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { persistor, store } from "@/redux/store";
-import { Environment } from "@/utils/environment";
-import { getApps } from "@react-native-firebase/app";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { initializeFirebase } from "@/utils/firebaseConfig";
 import {
   DarkTheme,
   DefaultTheme,
@@ -96,12 +94,14 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+
 // Configure splash screen with optimized settings for faster startup
 SplashScreen.setOptions({
   duration: 1000, // Reduced from 1000ms for faster startup
@@ -123,54 +123,25 @@ export default function RootLayout() {
     "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
   });
 
-  // Optimize Firebase initialization with useCallback
-  const initializeFirebase = useCallback(async () => {
-    try {
-      // Configure Google Sign-In with minimal config for faster startup
-      GoogleSignin.configure({
-        webClientId: Environment.GOOGLE_WEB_CLIENT_ID,
-        offlineAccess: false, // Set to false for faster initialization
-        hostedDomain: "",
-        forceCodeForRefreshToken: false, // Set to false for faster startup
-      });
-
-
-      // Quick Firebase check without delays
-      if (getApps().length === 0) {
-        // Reduced wait time for faster startup
-        await new Promise((resolve) => setTimeout(resolve, 300));
-      }
-
-      setFirebaseInitialized(true);
-    } catch (error) {
-      console.error("Firebase initialization error:", error);
-      setFirebaseInitialized(true); // Allow app to continue
-    }
-  }, []);
-
+  // Initialize Firebase
   useEffect(() => {
-    initializeFirebase();
-  }, [initializeFirebase]);
+    const initFirebase = async () => {
+      try {
+        const result = initializeFirebase();
 
-  // Hide splash screen as soon as possible
-  // useEffect(() => {
-  //   if (loaded && firebaseInitialized) {
-  //     const timer = setTimeout(() => {
-  //       SplashScreen.hide();
-  //     }, 100); // Minimal delay
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [loaded, firebaseInitialized]);
+        if (result.success) {
+          setFirebaseInitialized(true);
+        } else {
+          setFirebaseInitialized(true); // Set to true anyway to prevent infinite loading
+        }
+      } catch (error) {
+        console.error("Firebase initialization error:", error);
+        setFirebaseInitialized(true); // Allow app to continue
+      }
+    };
 
-  // Optimized loading component
-  // if (!loaded || !firebaseInitialized) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFCE1B" }}>
-  //       <ActivityIndicator size="large" color="#000" />
-  //       <Text style={{ marginTop: 10, color: "#000" }}>Loading...</Text>
-  //     </View>
-  //   );
-  // }
+    initFirebase();
+  }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

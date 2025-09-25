@@ -11,7 +11,6 @@ const useStyle = () => {
       justifyContent: "space-between",
       alignItems: "center",
       marginVertical: responsive.verticalScale(8),
-      paddingHorizontal: responsive.width(2),
     },
     forgotpassText: {
       color: colors.text,
