@@ -74,88 +74,32 @@
 //   );
 // }
 import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import { useSelector } from "react-redux";
 
 export default function IndexScreen() {
-  // const { token, hasSetupSecurity, authMethod, isCheckingAuth } = useSelector(
-  //   (state: RootState) => state.auth
-  // );
-
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [hasInitialized, setHasInitialized] = useState(false);
-
-  // useEffect(() => {
-  //   const initializeAuth = async () => {
-  //     try {
-  //       // Load auth data from secure storage
-  //       const authData = await loadAuthData();
-  //       dispatch(hydrateAuth(authData));
-
-  //       // Small delay to ensure smooth transition
-  //       await new Promise((resolve) => setTimeout(resolve, 500));
-  //     } catch (error) {
-  //       console.error("Failed to load auth data:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //       setHasInitialized(true);
-  //       dispatch(setAuthChecking(false));
-  //     }
-  //   };
-
-  //   if (!hasInitialized) {
-  //     initializeAuth();
-  //   }
-  // }, [dispatch, hasInitialized]);
-
-  // useEffect(() => {
-  //   if (!isLoading && !isCheckingAuth && hasInitialized) {
-  //     if (isAuthenticated && token) {
-  //       if (hasSetupSecurity && authMethod) {
-  //         // User has set up security, go to verification screen
-  //         if (authMethod === "biometric") {
-  //           router.replace("/(public)/auth-biometric");
-  //         } else if (authMethod === "mpin") {
-  //           router.replace("/(public)/auth-mpin");
-  //         }
-  //       } else {
-  //         // User is logged in but hasn't set up security
-  //         router.replace("/(public)/auth-setup");
-  //       }
-  //     } else {
-  //       // User is not authenticated, go to login
-  //       router.replace("/(public)/login");
-  //     }
-  //   }
-  // }, [
-  //   isAuthenticated,
-  //   token,
-  //   hasSetupSecurity,
-  //   authMethod,
-  //   isLoading,
-  //   isCheckingAuth,
-  //   hasInitialized,
-  //   router,
-  // ]);
   const data = useSelector((state) => state?.userData);
+  const [localUser, setLocalUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (Platform.OS === "web") {
+      const stored = localStorage.getItem("userData");
+      if (stored) {
+        setLocalUser(JSON.parse(stored));
+      }
+    }
+  }, []);
+
+  const token = data?.data?.idToken || localUser?.idToken;
 
   return (
     <>
-      {data?.data?.idToken ? (
+      {token ? (
         <Redirect href={"/(private)/(tabs)/home"} />
       ) : (
         <Redirect href="/(public)/login" />
       )}
     </>
   );
-  // Show loading screen while checking authentication
-  // return (
-  //   // <View style={{
-  //   //   flex: 1,
-  //   //   justifyContent: "center",
-  //   //   alignItems: "center",
-  //   //   backgroundColor: "#FFCE1B"
-  //   // }}>
-  //   //   <ActivityIndicator size="large" color="#000" />
-  //   // </View>
-  // );
 }
