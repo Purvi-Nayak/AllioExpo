@@ -1,242 +1,185 @@
-// import { useTheme } from "@/constants/Colors";
-// import responsive from "@utils/responsive";
-// import { StyleSheet } from "react-native";
-
-// const useStyle = () => {
-//   const colors = useTheme();
-//   return StyleSheet.create({
-//     logoContainer: {
-//       alignItems: "center",
-//     },
-//     formContainer: {
-//       justifyContent: "center",
-//       paddingVertical: responsive.height(10),
-//       ...responsive.containerStyle(500), // ✅ max 500px wide on web
-//     },
-//     title: {
-//       fontSize: responsive.moderateScale(28), // smaller on web
-//       color: colors.primary,
-//     },
-//     subtitle: {
-//       fontSize: responsive.moderateScale(14),
-//       color: colors.text,
-//       textAlign: "left",
-//       marginBottom: responsive.moderateScale(20),
-//     },
-//     loginButton: {
-//       marginVertical: responsive.moderateScale(6),
-//       backgroundColor: colors.primary,
-//       paddingVertical: responsive.moderateScale(12),
-//       borderRadius: responsive.moderateScale(8),
-//     },
-//     logo: {
-//       width: responsive.width(50), // ~50% screen width
-//       height: responsive.width(50),
-//       resizeMode: "contain",
-//     },
-//     dividerContainer: {
-//       flexDirection: "row",
-//       justifyContent: "center",
-//       alignItems: "center",
-//       gap: responsive.moderateScale(3),
-//     },
-//     socialSignInText: {
-//       fontSize: responsive.moderateScale(16),
-//       color: colors.primary,
-//       textAlign: "center",
-//       marginVertical: responsive.moderateScale(10),
-//     },
-//     emailInput: {
-//       marginBottom: responsive.moderateScale(12),
-//       borderRadius: responsive.moderateScale(8),
-//       paddingHorizontal: responsive.moderateScale(12),
-//     },
-//     inputContainer: {
-//       marginBottom: responsive.moderateScale(10),
-//       gap: responsive.moderateScale(10),
-//     },
-//     button: {
-//       marginVertical: responsive.moderateScale(6),
-//     },
-
-//     socialButtonsWrapper: {
-//       marginTop: responsive.moderateScale(12),
-//     },
-//     iconStyle: {
-//       width: responsive.moderateScale(18),
-//       height: responsive.moderateScale(18),
-//       resizeMode: "contain",
-//     },
-//     dividerText: {
-//       color: colors.primary,
-//       fontSize: responsive.moderateScale(16),
-//       justifyContent: "center",
-//       textAlign: "center",
-//     },
-//     orText: {
-//       color: colors.text,
-//       fontSize: responsive.moderateScale(16),
-//     },
-//     signUpText: {
-//       color: colors.primary,
-//       fontSize: responsive.moderateScale(16),
-//     },
-//     container: {
-//       flexDirection: "row",
-//       justifyContent: "space-between",
-//       alignItems: "center",
-//       marginTop: responsive.moderateScale(20),
-//       paddingHorizontal: responsive.moderateScale(40),
-//     },
-//     icon: {
-//       width: responsive.moderateScale(32),
-//       height: responsive.moderateScale(32),
-//       resizeMode: "contain",
-//     },
-//     SocialButtonStyle: {
-//       flexDirection: "row",
-//       justifyContent: "center",
-//       marginVertical: responsive.moderateScale(12),
-//     },
-//     loginText: {
-//       paddingVertical: responsive.moderateScale(20),
-//       fontSize: responsive.moderateScale(18),
-//       textAlign: "center",
-//       color: colors.gray,
-//     },
-//     loginLink: {
-//       fontSize: responsive.moderateScale(18),
-//       color: colors.primary,
-//       textAlign: "center",
-//     },
-//     line: {
-//       flex: 1,
-//       height: 1,
-//       backgroundColor: colors.text,
-//     },
-//   });
-// };
-
-// export default useStyle;
-
 import { useTheme } from "@/constants/Colors";
 import responsive from "@utils/responsive";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewStyle } from "react-native";
 
 const useStyle = () => {
   const colors = useTheme();
 
+  // Responsive spacing and sizing helpers
+  const getResponsiveSpacing = () => ({
+    containerPadding: responsive.isWeb
+      ? responsive.isDesktop
+        ? responsive.spacing.xxl()
+        : responsive.spacing.xl()
+      : responsive.spacing.lg(),
+    sectionSpacing: responsive.isWeb
+      ? responsive.isDesktop
+        ? responsive.spacing.xl()
+        : responsive.spacing.lg()
+      : responsive.spacing.md(),
+    elementSpacing: responsive.spacing.md(),
+    smallSpacing: responsive.spacing.sm(),
+  });
+
+  const spacing = getResponsiveSpacing();
+
+  // Form container with responsive layout
+  const formContainerStyle: ViewStyle = {
+    justifyContent: "center" as const,
+    paddingVertical: spacing.containerPadding,
+    width: "100%",
+    alignSelf: "center" as const,
+    ...(responsive.isWeb && {
+      minHeight: responsive.isDesktop ? 600 : 500,
+    }),
+    ...(typeof responsive.layout.formMaxWidth === "number" && {
+      maxWidth: responsive.layout.formMaxWidth,
+    }),
+  };
+
   return StyleSheet.create({
     container: {
       flex: 1,
-      ...responsive.containerStyle(500),
+      ...responsive.containerStyle(responsive.isDesktop ? 600 : 500),
     },
 
     logoContainer: {
       alignItems: "center",
-      marginTop: responsive.verticalScale(20),
+      marginTop: responsive.isWeb
+        ? responsive.isDesktop
+          ? spacing.sectionSpacing
+          : spacing.elementSpacing
+        : spacing.elementSpacing,
+      marginBottom: spacing.sectionSpacing,
     },
 
     logo: {
-      width: responsive.width(40),
-      height: responsive.width(40),
+      width: responsive.isWeb
+        ? responsive.isDesktop
+          ? responsive.moderateScale(120)
+          : responsive.moderateScale(100)
+        : responsive.width(30),
+      height: responsive.isWeb
+        ? responsive.isDesktop
+          ? responsive.moderateScale(120)
+          : responsive.moderateScale(100)
+        : responsive.width(30),
       resizeMode: "contain",
     },
 
-    formContainer: {
-      justifyContent: "center",
-      paddingVertical: responsive.height(5),
-      ...responsive.containerStyle(500),
-    },
+    formContainer: formContainerStyle,
 
     title: {
-      fontSize: responsive.moderateScale(28),
+      fontSize: responsive.typography.titleLarge(),
       color: colors.primary,
-      marginBottom: responsive.verticalScale(10),
+      marginBottom: spacing.smallSpacing,
+      textAlign: responsive.isWeb && responsive.isDesktop ? "center" : "left",
+      fontWeight: "bold",
     },
 
     subtitle: {
-      fontSize: responsive.moderateScale(14),
+      fontSize: responsive.typography.body(),
       color: colors.text,
-      marginBottom: responsive.verticalScale(20),
-    },
-
-    emailInput: {
-      marginBottom: responsive.verticalScale(12),
-      borderRadius: responsive.moderateScale(8),
-      paddingHorizontal: responsive.moderateScale(12),
-      height: responsive.verticalScale(45),
-      borderWidth: 1,
-      borderColor: colors.border,
+      marginBottom: spacing.sectionSpacing,
+      textAlign: responsive.isWeb && responsive.isDesktop ? "center" : "left",
+      lineHeight: responsive.typography.body() * 1.4,
     },
 
     inputContainer: {
-      marginBottom: responsive.verticalScale(10),
-      gap: responsive.verticalScale(10),
+      marginBottom: spacing.elementSpacing,
+      gap: spacing.elementSpacing,
+    },
+
+    emailInput: {
+      marginBottom: spacing.elementSpacing,
+      borderRadius: responsive.moderateScale(8),
+      paddingHorizontal: spacing.elementSpacing,
+      height: responsive.layout.inputHeight,
+      borderWidth: 1,
+      borderColor: colors.lightGray,
+      fontSize: responsive.typography.body(),
     },
 
     loginButton: {
-      marginVertical: responsive.verticalScale(6),
+      marginVertical: spacing.smallSpacing,
       backgroundColor: colors.primary,
-      paddingVertical: responsive.verticalScale(12),
+      paddingVertical: spacing.elementSpacing,
       borderRadius: responsive.moderateScale(8),
       alignItems: "center",
+      height: responsive.layout.buttonHeight,
+      justifyContent: "center",
+      ...(responsive.isWeb && {
+        cursor: "pointer" as any,
+        transition: "all 0.2s ease" as any,
+      }),
     },
 
     loginText: {
-      fontSize: responsive.moderateScale(18),
+      fontSize: responsive.typography.bodyLarge(),
       color: colors.gray,
       textAlign: "center",
-      paddingVertical: responsive.verticalScale(12),
+      paddingVertical: spacing.elementSpacing,
+      lineHeight: responsive.typography.bodyLarge() * 1.3,
     },
 
     loginLink: {
-      fontSize: responsive.moderateScale(18),
+      fontSize: responsive.typography.bodyLarge(),
       color: colors.primary,
       textAlign: "center",
+      fontWeight: "600",
     },
 
     dividerContainer: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      gap: responsive.moderateScale(3),
-      marginVertical: responsive.verticalScale(10),
+      marginVertical: spacing.elementSpacing,
+      paddingHorizontal: responsive.isWeb ? 0 : 0, // Remove extra padding to align with inputs
+      marginHorizontal: responsive.isWeb ? 0 : 0, // Align with form width
     },
 
     dividerText: {
-      fontSize: responsive.moderateScale(16),
+      fontSize: responsive.typography.body(),
       color: colors.primary,
       textAlign: "center",
+      marginHorizontal: spacing.smallSpacing,
     },
 
     orText: {
-      fontSize: responsive.moderateScale(15),
+      fontSize: responsive.typography.body(),
       color: colors.text,
       textAlign: "center",
     },
 
     socialSignInText: {
-      fontSize: responsive.moderateScale(16),
+      fontSize: responsive.typography.body(),
       color: colors.primary,
       textAlign: "center",
-      marginVertical: responsive.verticalScale(10),
+      marginHorizontal: spacing.smallSpacing,
+      fontWeight: "500",
     },
 
     socialButtonsWrapper: {
-      marginTop: responsive.verticalScale(12),
+      marginTop: spacing.elementSpacing,
+      marginBottom: spacing.elementSpacing,
     },
 
     SocialButtonStyle: {
       flexDirection: "row",
       justifyContent: "center",
-      marginVertical: responsive.verticalScale(12),
       alignItems: "center",
+      gap: spacing.elementSpacing,
+      marginVertical: spacing.elementSpacing,
+      flexWrap: "nowrap",
+      ...(responsive.isMobile && {
+        paddingHorizontal: spacing.smallSpacing,
+        gap: spacing.smallSpacing,
+      }),
     },
 
     iconStyle: {
-      width: responsive.moderateScale(18),
-      height: responsive.moderateScale(18),
+      width: responsive.moderateScale(20),
+      height: responsive.moderateScale(20),
       resizeMode: "contain",
     },
 
@@ -247,19 +190,53 @@ const useStyle = () => {
     },
 
     containerRow: {
-      flexDirection: "row",
-      justifyContent: "space-between",
+      flexDirection: "row", // Always keep in row for better layout
+      justifyContent: "center", // Center the content
       alignItems: "center",
-      marginTop: responsive.verticalScale(20),
-      paddingHorizontal: responsive.width(10),
+      marginTop: spacing.sectionSpacing,
+      paddingHorizontal: responsive.isWeb ? 0 : spacing.elementSpacing,
+      gap: responsive.spacing.xs(), // Small consistent gap between text and link
     },
 
     line: {
       flex: 1,
       height: 1,
       backgroundColor: colors.text,
+      opacity: 0.3,
+      marginHorizontal: spacing.smallSpacing,
+    },
+
+    signUpText: {
+      color: colors.primary,
+      fontSize: responsive.typography.body(),
+      fontWeight: "600",
+      ...(responsive.isWeb && {
+        cursor: "pointer" as any,
+        textDecorationLine: "underline" as any,
+      }),
+    },
+
+    // Responsive utility classes
+    webOnly: {
+      ...(responsive.isWeb ? {} : { display: "none" }),
+    },
+
+    mobileOnly: {
+      ...(responsive.isWeb ? { display: "none" } : {}),
+    },
+
+    desktopOnly: {
+      ...(responsive.isDesktop ? {} : { display: "none" }),
+    },
+
+    tabletUp: {
+      ...(responsive.isTablet || responsive.isDesktop
+        ? {}
+        : { display: "none" }),
     },
   });
 };
 
 export default useStyle;
+
+
