@@ -4,9 +4,10 @@ import Text from "@/components/atoms/Text";
 import RememberForgot from "@/components/molecule/RememberForget";
 import SignInWithFacebook from "@/components/molecule/SocialSignInFacebook";
 import SignInWithGoogle from "@/components/molecule/SocialSignInGoogle";
+import { useResponsive } from "@/hooks/useResponsive";
 import { Formik } from "formik";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
 import useStyle from "./style";
 import { useLoginForm } from "./useLoginForm";
 
@@ -16,6 +17,7 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
   const styles = useStyle();
+  const responsive = useResponsive();
   const {
     initialValues,
     loginValidationSchema,
@@ -24,7 +26,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
     setRemember,
     loading,
     navigateToRegister,
-    navigateToForgotPassword,
   } = useLoginForm();
 
   const onLoginSubmit = async (values: any) => {
@@ -35,11 +36,41 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.title} type="bold">
-        Login
+      {/* Removed Allio header/logo for web platform */}
+
+      <Text
+        style={[
+          styles.title,
+          responsive.mediaQuery({
+            desktop: {
+              textAlign: "center",
+              marginBottom: responsive.spacing.md(),
+            },
+            mobile: {
+              textAlign: "left",
+              marginBottom: responsive.spacing.sm(),
+              marginTop: responsive.spacing.lg(),
+            },
+          }),
+        ]}
+        type="bold"
+      >
+        {Platform.OS === "web" ? "Welcome Back" : "Login"}
       </Text>
-      <Text style={styles.subtitle} type="regular">
-        Please sign in to continue
+
+      <Text
+        style={[
+          styles.subtitle,
+          responsive.mediaQuery({
+            desktop: { textAlign: "center" },
+            mobile: { textAlign: "left" },
+          }),
+        ]}
+        type="regular"
+      >
+        {Platform.OS === "web"
+          ? "Sign in to access your account"
+          : "Please sign in to continue"}
       </Text>
 
       <View style={styles.inputContainer}>
@@ -86,10 +117,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
               />
 
               <Button
-                title="Login"
+                title="Sign In"
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}
+                style={[
+                  styles.loginButton,
+                  responsive.mediaQuery({
+                    desktop: { height: responsive.layout.buttonHeight },
+                    mobile: { height: 48 },
+                  }),
+                ]}
               />
             </>
           )}
@@ -102,13 +140,35 @@ const LoginForm: React.FC<LoginFormProps> = ({ setLoading }) => {
         <View style={styles.line} />
       </View>
 
-      <View style={styles.SocialButtonStyle}>
+      <View
+        style={[
+          styles.SocialButtonStyle,
+          responsive.mediaQuery({
+            mobile: {
+              flexDirection: "row" as const,
+              gap: responsive.spacing.md(),
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            tablet: {
+              flexDirection: "row" as const,
+              gap: responsive.spacing.md(),
+              justifyContent: "center",
+            },
+            desktop: {
+              flexDirection: "row" as const,
+              gap: responsive.spacing.lg(),
+              justifyContent: "center",
+            },
+          }),
+        ]}
+      >
         <SignInWithFacebook setLoading={setLoading ?? (() => {})} />
         <SignInWithGoogle setLoading={setLoading ?? (() => {})} />
       </View>
 
-      <View style={styles.dividerContainer}>
-        <Text style={styles.orText}>Don't have an account?</Text>
+      <View style={styles.containerRow}>
+        <Text style={styles.orText}>Don&apos;t have an account?</Text>
         <TouchableOpacity onPress={navigateToRegister}>
           <Text style={styles.signUpText} type="semibold">
             Sign Up
