@@ -1,11 +1,20 @@
 import { IconSymbol, IconSymbolName } from "@/components/ui/IconSymbol";
 import { useTheme } from "@/constants/Colors";
+import responsive from "@/utils/responsive";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
 
+// Import web drawer layout
+import DrawerLayout from "./_layout.web";
+
 export default function TabsLayout() {
   const theme = useTheme();
-  
+
+  // For web, use drawer navigation instead of tabs
+  if (Platform.OS === "web") {
+    return <DrawerLayout />;
+  }
+
   const TabBarIcon = ({
     name,
     color,
@@ -13,7 +22,7 @@ export default function TabsLayout() {
     name: IconSymbolName;
     color: string;
   }) => {
-    return <IconSymbol size={28} name={name} color={color} />;
+    return <IconSymbol size={responsive.scale(28)} name={name} color={color} />;
   };
 
   const TABS: { route: string; title: string; icon: IconSymbolName }[] = [
@@ -33,6 +42,11 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: theme.primary,
           position: Platform.OS === "ios" ? "absolute" : "relative",
+          height: responsive.scale(60),
+        },
+        tabBarLabelStyle: {
+          fontSize: responsive.scale(12),
+          fontFamily: "Poppins-Medium",
         },
       }}
     >

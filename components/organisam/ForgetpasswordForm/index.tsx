@@ -204,6 +204,8 @@
 // };
 
 // export default ForgotPasswordForm;
+import { Web } from "@/components/atoms/ResponsiveComponent";
+import { useResponsive } from "@/hooks/useResponsive";
 import useValidation from "@/utils/velidationSchema";
 import Button from "@components/atoms/Button";
 import Input from "@components/atoms/Input";
@@ -211,10 +213,11 @@ import Text from "@components/atoms/Text";
 import { Formik } from "formik";
 import React from "react";
 import {
-    KeyboardAvoidingView,
-    Platform,
-    TouchableOpacity,
-    View,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import useStyle from "./style";
@@ -229,6 +232,7 @@ const initialValues: ForgotPasswordValues = { email: "" };
 
 const ForgotPasswordForm: React.FC = () => {
   const styles = useStyle();
+  const responsive = useResponsive();
   const { forgotPasswordSchema } = useValidation();
   const { handleForgotPassword, navigateToLogin, loading } =
     useForgotPasswordForm();
@@ -239,46 +243,93 @@ const ForgotPasswordForm: React.FC = () => {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView style={styles.scrollView}>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={forgotPasswordSchema}
-          onSubmit={handleForgotPassword}
-        >
-          {({ handleChange, handleSubmit, values, errors, touched }) => (
-            <View style={styles.form}>
-              <Text style={styles.title} type="bold">
-                Forgot Password
-              </Text>
-              <Text style={styles.subtitle}>
-                Enter your email to receive an OTP for password reset
-              </Text>
-              <Input
-                label="Email"
-                placeholder="e.g., john.doe@example.com"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                error={touched.email ? errors.email : undefined}
-                touched={touched.email}
-                keyboardType="email-address"
-                autoCapitalize="none"
-              />
-              <Button
-                title={loading ? "Sending..." : "Send OTP"}
-                onPress={handleSubmit as () => void}
-                disabled={loading}
-                loading={loading}
+        <View style={styles.formContainer}>
+          {/* Conditional logo display - larger on desktop, smaller on mobile */}
+          <Web>
+            <View style={styles.logoContainer}>
+              <Image
+                source={require("@/assets/images/Allio_logo.png")}
+                style={styles.logo}
               />
             </View>
-          )}
-        </Formik>
+          </Web>
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={forgotPasswordSchema}
+            onSubmit={handleForgotPassword}
+          >
+            {({ handleChange, handleSubmit, values, errors, touched }) => (
+              <View style={styles.form}>
+                <Text
+                  style={[
+                    styles.title,
+                    responsive.mediaQuery({
+                      desktop: {
+                        textAlign: "center",
+                        marginBottom: responsive.spacing.md(),
+                      },
+                      mobile: {
+                        textAlign: "left",
+                        marginBottom: responsive.spacing.sm(),
+                        marginTop: responsive.spacing.lg(),
+                      },
+                    }),
+                  ]}
+                  type="bold"
+                >
+                  Forgot Password
+                </Text>
+
+                <Text
+                  style={[
+                    styles.subtitle,
+                    responsive.mediaQuery({
+                      desktop: { textAlign: "center" },
+                      mobile: { textAlign: "left" },
+                    }),
+                  ]}
+                >
+                  Enter your email to receive an OTP for password reset
+                </Text>
+
+                <Input
+                  label="Email"
+                  placeholder="e.g., john.doe@example.com"
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  error={touched.email ? errors.email : undefined}
+                  touched={touched.email}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+
+                <Button
+                  title={loading ? "Sending..." : "Send OTP"}
+                  onPress={handleSubmit as () => void}
+                  disabled={loading}
+                  loading={loading}
+                  style={[
+                    styles.sendButton,
+                    responsive.mediaQuery({
+                      desktop: { height: responsive.layout.buttonHeight },
+                      mobile: { height: 48 },
+                    }),
+                  ]}
+                />
+              </View>
+            )}
+          </Formik>
+
+          <View style={styles.dividerContainer}>
+            <TouchableOpacity onPress={navigateToLogin}>
+              <Text style={styles.loginText} type="semibold">
+                Back to Login
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
-      <View style={styles.dividerContainer}>
-        <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.loginText} type="semibold">
-            Back to Login
-          </Text>
-        </TouchableOpacity>
-      </View>
     </KeyboardAvoidingView>
   );
 };

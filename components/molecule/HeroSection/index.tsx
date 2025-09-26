@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
-import { View, ImageBackground } from 'react-native';
+import { IMAGES } from "@assets/index";
+import Button from "@components/atoms/Button";
+import Text from "@components/atoms/Text";
+import React, { useEffect } from "react";
+import { ImageBackground, Platform, View } from "react-native";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
   Easing,
-} from 'react-native-reanimated';
-import Text from '@components/atoms/Text';
-import { IMAGES } from '@assets/index';
-import useStyle from './style';
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import useStyle from "./style";
 
 interface Props {
   description: string;
@@ -31,7 +32,7 @@ export default function HeroSection({ description }: Props) {
       easing: Easing.out(Easing.cubic),
     });
     btnOpacity.value = withTiming(1, { duration: 1000 });
-  }, []);
+  }, [titleY, descY, btnOpacity]);
 
   const titleStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: titleY.value }],
@@ -49,19 +50,51 @@ export default function HeroSection({ description }: Props) {
     <ImageBackground
       source={IMAGES.Mobile}
       resizeMode="cover"
-      style={styles.bg}>
+      style={styles.bg}
+    >
+      {/* Overlay with conditional styling for web/mobile */}
       <View style={styles.overlay} />
-      <Animated.View style={[titleStyle]}>
-        <Text type="bold" style={styles.title}>
-          Welcome to ALLIO
-        </Text>
-      </Animated.View>
-      <Animated.View style={[descStyle]}>
-        <Text style={styles.description}>{description}</Text>
-      </Animated.View>
-      <Animated.View style={[styles.buttonRow, btnStyle]}></Animated.View>
 
-      {/* Decorative floating shape using Lottie or static */}
+      <View style={styles.contentContainer}>
+        <Animated.View style={[titleStyle, styles.titleContainer]}>
+          <Text type="bold" style={styles.title}>
+            Welcome to ALLIO
+          </Text>
+          {Platform.OS === "web" && (
+            <Text type="bold" style={styles.subtitle}>
+              Your All-in-One Productivity Suite
+            </Text>
+          )}
+        </Animated.View>
+
+        <Animated.View style={[descStyle, styles.descriptionContainer]}>
+          <Text style={styles.description}>{description}</Text>
+        </Animated.View>
+
+        {Platform.OS === "web" && (
+          <Animated.View style={[styles.buttonRow, btnStyle]}>
+            <Button
+              title="Get Started"
+              style={styles.primaryButton}
+              textStyle={styles.buttonText}
+            />
+            <Button
+              title="Learn More"
+              style={styles.secondaryButton}
+              textStyle={styles.secondaryButtonText}
+            />
+          </Animated.View>
+        )}
+
+        {/* Decorative Elements for Web */}
+        {Platform.OS === "web" && (
+          <Animated.View style={[styles.decorativeElements, btnStyle]}>
+            <View style={styles.floatingCard1} />
+            <View style={styles.floatingCard2} />
+            <View style={styles.floatingCard3} />
+          </Animated.View>
+        )}
+      </View>
     </ImageBackground>
   );
 }

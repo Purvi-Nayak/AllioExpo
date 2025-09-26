@@ -89,7 +89,8 @@
 // };
 import { colors } from "@/constants/Colors"; // ✅ Import static colors instead of useTheme hook
 import { FONTS } from "@assets/index";
-import { scale } from "react-native-size-matters";
+import responsive from "@utils/responsive";
+import { Platform } from "react-native";
 import Toast from "react-native-toast-message";
 
 export const showSuccess = (message: string): void => {
@@ -97,19 +98,28 @@ export const showSuccess = (message: string): void => {
     type: "success",
     text1: "Success",
     text2: message,
-    position: "bottom",
+    position: Platform.OS === "web" ? "top" : "bottom",
     visibilityTime: 5000,
     autoHide: true,
     text1Style: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
       color: colors.green, // ✅ Use static colors
       fontFamily: FONTS.bold,
     },
     text2Style: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.black,
       fontFamily: FONTS.regular,
     },
+    ...(Platform.OS === "web" && {
+      topOffset: 60,
+      props: {
+        style: {
+          maxWidth: 400,
+          alignSelf: "center",
+        },
+      },
+    }),
   });
 };
 
@@ -118,19 +128,28 @@ export const showError = (message: string): void => {
     type: "error",
     text1: "Error",
     text2: message,
-    position: "bottom",
+    position: Platform.OS === "web" ? "top" : "bottom",
     visibilityTime: 5000,
     autoHide: true,
     text1Style: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
       color: colors.error, // ✅ Use static colors
       fontFamily: FONTS.light,
     },
     text2Style: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.black,
       fontFamily: FONTS.regular,
     },
+    ...(Platform.OS === "web" && {
+      topOffset: 60,
+      props: {
+        style: {
+          maxWidth: 400,
+          alignSelf: "center",
+        },
+      },
+    }),
   });
 };
 
@@ -139,19 +158,28 @@ export const showInfo = (message: string): void => {
     type: "info",
     text1: "Info",
     text2: message,
-    position: "bottom",
+    position: Platform.OS === "web" ? "top" : "bottom",
     visibilityTime: 5000,
     autoHide: true,
     text1Style: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
       color: colors.secondary, // ✅ Changed from lightBlue to secondary (better color)
       fontFamily: FONTS.light,
     },
     text2Style: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.black,
       fontFamily: FONTS.regular,
     },
+    ...(Platform.OS === "web" && {
+      topOffset: 60,
+      props: {
+        style: {
+          maxWidth: 400,
+          alignSelf: "center",
+        },
+      },
+    }),
   });
 };
 
@@ -160,19 +188,28 @@ export const showWarning = (message: string): void => {
     type: "warning", // ✅ Changed from "info" to "warning"
     text1: "Warning",
     text2: message,
-    position: "bottom",
+    position: Platform.OS === "web" ? "top" : "bottom",
     visibilityTime: 5000,
     autoHide: true,
     text1Style: {
-      fontSize: scale(16),
+      fontSize: responsive.moderateScale(16),
       color: colors.primary, // ✅ Changed from lightyellow to primary (more visible)
       fontFamily: FONTS.light,
     },
     text2Style: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.black,
       fontFamily: FONTS.regular,
     },
+    ...(Platform.OS === "web" && {
+      topOffset: 60,
+      props: {
+        style: {
+          maxWidth: 400,
+          alignSelf: "center",
+        },
+      },
+    }),
   });
 };
 
@@ -182,18 +219,27 @@ export const showAllioSuccess = (message: string): void => {
     type: "success",
     text1: "AllioExpo",
     text2: message,
-    position: "top",
+    position: Platform.OS === "web" ? "top" : "top",
     visibilityTime: 3000,
     autoHide: true,
     text1Style: {
-      fontSize: scale(18),
+      fontSize: responsive.moderateScale(18),
       color: colors.primary,
       fontFamily: FONTS.bold,
     },
     text2Style: {
-      fontSize: scale(14),
+      fontSize: responsive.moderateScale(14),
       color: colors.darkGray,
       fontFamily: FONTS.regular,
     },
+    ...(Platform.OS === "web" && {
+      topOffset: 60,
+      props: {
+        style: {
+          maxWidth: 400,
+          alignSelf: "center",
+        },
+      },
+    }),
   });
 };

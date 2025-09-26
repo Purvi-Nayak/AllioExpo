@@ -1,22 +1,22 @@
-import { Dimensions, StyleSheet } from "react-native";
-
-const { width } = Dimensions.get("window");
+import responsive from "@/utils/responsive";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: responsive.moderateScale(20),
+    ...(responsive.containerStyle(500) as any),
   },
   header: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: responsive.verticalScale(20),
+    paddingBottom: responsive.verticalScale(20),
   },
   backButton: {
-    padding: 8,
+    padding: responsive.moderateScale(8),
     alignSelf: "flex-start",
   },
   backText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Medium",
   },
   content: {
@@ -24,59 +24,59 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 28,
+    fontSize: responsive.moderateScale(28),
     fontFamily: "Poppins-Bold",
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: responsive.verticalScale(12),
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Regular",
     textAlign: "center",
-    marginBottom: 40,
-    paddingHorizontal: 20,
-    lineHeight: 24,
+    marginBottom: responsive.verticalScale(40),
+    paddingHorizontal: responsive.moderateScale(20),
+    lineHeight: responsive.moderateScale(22),
   },
   dotsContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 40,
-    gap: 16,
+    marginBottom: responsive.verticalScale(40),
+    gap: responsive.moderateScale(16),
   },
   dot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    width: responsive.moderateScale(16),
+    height: responsive.moderateScale(16),
+    borderRadius: responsive.moderateScale(8),
   },
   keypad: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    width: width - 40,
-    maxWidth: 300,
+    width: responsive.width(85),
+    maxWidth: responsive.moderateScale(300),
   },
   keypadButton: {
-    width: (width - 80) / 3,
-    maxWidth: 80,
-    height: 60,
-    margin: 8,
-    borderRadius: 12,
+    width: responsive.moderateScale(70),
+    height: responsive.verticalScale(50),
+    margin: responsive.moderateScale(8),
+    borderRadius: responsive.moderateScale(12),
     borderWidth: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   keypadText: {
     fontFamily: "Poppins-SemiBold",
+    fontSize: responsive.moderateScale(20),
   },
   continueButton: {
     width: "100%",
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginTop: 40,
+    paddingVertical: responsive.verticalScale(16),
+    borderRadius: responsive.moderateScale(12),
+    marginTop: responsive.verticalScale(40),
     alignItems: "center",
   },
   continueText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-SemiBold",
   },
 });

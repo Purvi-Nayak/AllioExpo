@@ -1,45 +1,47 @@
-import { useTheme } from '@/constants/Colors';
-import { height, width } from '@utils/helper';
-import { StyleSheet } from 'react-native';
-import { scale } from 'react-native-size-matters';
+import { useTheme } from "@/constants/Colors";
+import responsive from "@/utils/responsive";
+import { height, width } from "@utils/helper";
+import { StyleSheet } from "react-native";
+import { scale } from "react-native-size-matters";
 
 const useStyle = () => {
-  const  colors  = useTheme();
+  const colors = useTheme();
 
   return StyleSheet.create({
     headerContainer: {
-      position: 'relative',
-      height: height * 0.06,
+      position: "relative",
+      height: responsive.isMobile ? height * 0.08 : height * 0.06,
       backgroundColor: colors.primary,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
+      paddingTop: responsive.isMobile ? responsive.spacing.xs() : 0,
     },
     leftButton: {
-      position: 'absolute',
+      position: "absolute",
       left: width * 0.04,
-      top: '50%',
+      top: "50%",
       transform: [{ translateY: -scale(18) }],
       zIndex: 1,
       padding: scale(8),
-      backgroundColor: 'transparent',
+      backgroundColor: "transparent",
     },
     leftLogo: {
-      position: 'absolute',
+      position: "absolute",
       left: width * 0.04,
-      top: '50%',
+      top: "50%",
       transform: [{ translateY: -scale(22) }],
       zIndex: 1,
     },
     centerContainer: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingHorizontal: width * 0.15,
+      justifyContent: "center",
+      alignItems: "center",
+      paddingHorizontal: responsive.isMobile ? width * 0.2 : width * 0.15,
     },
     rightButton: {
-      position: 'absolute',
+      position: "absolute",
       right: width * 0.04,
-      top: '50%',
+      top: "50%",
       transform: [{ translateY: -scale(15) }],
       zIndex: 1,
     },
@@ -49,13 +51,16 @@ const useStyle = () => {
       tintColor: colors.black,
     },
     title: {
-      fontSize: scale(22),
+      fontSize: responsive.isMobile
+        ? responsive.typography.bodyLarge()
+        : responsive.typography.title(),
       color: colors.black,
-      textAlign: 'center',
+      textAlign: "center",
+      fontWeight: "bold",
     },
     logoStyle: {
-      width: scale(50),
-      height: scale(50),
+      width: responsive.isMobile ? scale(40) : scale(50),
+      height: responsive.isMobile ? scale(40) : scale(50),
     },
   });
 };

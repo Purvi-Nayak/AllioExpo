@@ -167,10 +167,12 @@
 // export default RegistrationForm;
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
+import { Web } from "@/components/atoms/ResponsiveComponent";
 import Text from "@/components/atoms/Text";
+import { useResponsive } from "@/hooks/useResponsive";
 import { Formik } from "formik";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import useStyle from "./style";
 import useRegisterForm from "./useRegisterForm";
 
@@ -180,6 +182,7 @@ interface RegistrationFormProps {
 
 const RegistrationForm: React.FC<RegistrationFormProps> = ({ setLoading }) => {
   const styles = useStyle();
+  const responsive = useResponsive();
   const {
     initialValues,
     registrationValidationSchema,
@@ -196,10 +199,46 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ setLoading }) => {
 
   return (
     <View style={styles.formContainer}>
-      <Text style={styles.title} type="bold">
+      {/* Conditional logo display - larger on desktop, smaller on mobile */}
+      <Web>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require("@/assets/images/Allio_logo.png")}
+            style={styles.logo}
+          />
+        </View>
+      </Web>
+
+      <Text
+        style={[
+          styles.title,
+          responsive.mediaQuery({
+            desktop: {
+              textAlign: "center",
+              marginBottom: responsive.spacing.md(),
+            },
+            mobile: {
+              textAlign: "left",
+              marginBottom: responsive.spacing.sm(),
+              marginTop: responsive.spacing.lg(),
+            },
+          }),
+        ]}
+        type="bold"
+      >
         Create Account
       </Text>
-      <Text style={styles.subtitle} type="regular">
+
+      <Text
+        style={[
+          styles.subtitle,
+          responsive.mediaQuery({
+            desktop: { textAlign: "center" },
+            mobile: { textAlign: "left" },
+          }),
+        ]}
+        type="regular"
+      >
         Sign up to get started
       </Text>
 
@@ -290,6 +329,13 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ setLoading }) => {
                 onPress={handleSubmit as () => void}
                 disabled={loading}
                 loading={loading}
+                style={[
+                  styles.registerButton,
+                  responsive.mediaQuery({
+                    desktop: { height: responsive.layout.buttonHeight },
+                    mobile: { height: 48 },
+                  }),
+                ]}
               />
             </>
           )}

@@ -1,5 +1,5 @@
-import { useTheme } from '@/constants/Colors';
-import React, { memo } from 'react';
+import { useTheme } from "@/constants/Colors";
+import React, { memo } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -7,10 +7,9 @@ import {
   View,
   ViewStyle,
   useColorScheme,
-} from 'react-native';
-import { CustomHeader, CustomLoader, CustomStatusBar } from '../../index';
-import useStyle from './style';
-
+} from "react-native";
+import { CustomHeader, CustomLoader, CustomStatusBar } from "../../index";
+import useStyle from "./style";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -26,6 +25,7 @@ interface PageLayoutProps {
   showAppLogo?: boolean;
   showBackArrow?: boolean;
   title?: string;
+  scrollable?: boolean; // Add option to disable scrolling
 }
 
 const Container: React.FC<PageLayoutProps> = ({
@@ -34,27 +34,28 @@ const Container: React.FC<PageLayoutProps> = ({
   onProfilePress,
   showLoader = false,
   statusBarColor,
-  loaderText = 'Loading...',
+  loaderText = "Loading...",
   keyboardAvoiding = false,
   style,
   auth = false,
   showProfileLogo = false,
   showAppLogo = false,
   showBackArrow = false,
-  title = '',
+  title = "",
+  scrollable = true, // Default to scrollable
 }) => {
   const theme = useTheme();
   const colorScheme = useColorScheme();
-  const isDark = colorScheme === 'dark';
+  const isDark = colorScheme === "dark";
   const styles = useStyle();
 
   return (
-    <View style={[styles.flex, { backgroundColor: theme.background }] }>
+    <View style={[styles.flex, { backgroundColor: theme.background }]}>
       <CustomStatusBar
         backgroundColor={
           statusBarColor ?? (auth ? theme.background : theme.primary)
         }
-        barStyle={auth && isDark ? 'light-content' : 'dark-content'}
+        barStyle={auth && isDark ? "light-content" : "dark-content"}
       />
       {showHeader && (
         <CustomHeader
@@ -66,19 +67,32 @@ const Container: React.FC<PageLayoutProps> = ({
         />
       )}
       <CustomLoader visible={showLoader} text={loaderText} />
-      {keyboardAvoiding ? (
+      {!scrollable ? (
+        // Non-scrollable content (for specific screens that need fixed layouts)
+        <View style={[styles.flex, style]}>{children}</View>
+      ) : keyboardAvoiding ? (
+        // Scrollable with keyboard avoiding
         <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={[styles.flex, style]}>
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={[styles.flex, style]}
+        >
           <ScrollView
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.scrollContainer}>
+            contentContainerStyle={styles.scrollContainer}
+          >
             {children}
           </ScrollView>
         </KeyboardAvoidingView>
       ) : (
-        <>{children}</>
+        // Regular scrollable content
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContainer}
+          style={[styles.flex, style]}
+        >
+          {children}
+        </ScrollView>
       )}
     </View>
   );

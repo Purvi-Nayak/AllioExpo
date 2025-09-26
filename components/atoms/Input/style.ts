@@ -22,7 +22,7 @@ const useStyle = () => {
       borderColor: colors.text,
       borderRadius: responsive.moderateScale(10),
       backgroundColor: colors.background,
-      minHeight: responsive.verticalScale(45),
+      height: responsive.layout.inputHeight, // Use consistent height from responsive system
       paddingHorizontal: responsive.moderateScale(10),
     },
     inputContainerFocused: {

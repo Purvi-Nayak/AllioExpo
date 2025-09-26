@@ -7,9 +7,14 @@ const useStyle = () => {
 
   return StyleSheet.create({
     button: {
-      marginHorizontal: responsive.moderateScale(8),
-      borderRadius: responsive.moderateScale(20),
-      padding: responsive.moderateScale(6),
+      marginHorizontal: responsive.isMobile
+        ? responsive.spacing.xs()
+        : responsive.spacing.sm(),
+      // Make buttons perfectly round
+      width: responsive.isMobile ? 60 : 70,
+      height: responsive.isMobile ? 60 : 70,
+      borderRadius: responsive.isMobile ? 30 : 35, // Half of width/height for perfect circle
+      padding: 0, // Remove padding since we're using fixed dimensions
       backgroundColor: colors.white,
       alignItems: "center",
       justifyContent: "center",
@@ -24,8 +29,12 @@ const useStyle = () => {
       opacity: 0.8,
     },
     icon: {
-      width: responsive.moderateScale(32),
-      height: responsive.moderateScale(32),
+      width: responsive.isMobile
+        ? responsive.moderateScale(28)
+        : responsive.moderateScale(32),
+      height: responsive.isMobile
+        ? responsive.moderateScale(28)
+        : responsive.moderateScale(32),
       resizeMode: "contain",
     },
   });

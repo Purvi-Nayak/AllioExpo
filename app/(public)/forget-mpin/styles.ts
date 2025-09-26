@@ -1,78 +1,80 @@
+import responsive from "@/utils/responsive";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    ...(responsive.containerStyle(500) as any),
   },
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingHorizontal: responsive.moderateScale(20),
+    paddingTop: responsive.verticalScale(20),
+    paddingBottom: responsive.verticalScale(10),
   },
   headerBackButton: {
-    padding: 8,
+    padding: responsive.moderateScale(8),
   },
   headerBackText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Medium",
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: responsive.moderateScale(20),
     justifyContent: "center",
   },
   formContainer: {
     width: "100%",
   },
   title: {
-    fontSize: 28,
+    fontSize: responsive.moderateScale(28),
     fontFamily: "Poppins-Bold",
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: responsive.verticalScale(12),
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Regular",
     textAlign: "center",
-    marginBottom: 40,
-    lineHeight: 24,
+    marginBottom: responsive.verticalScale(40),
+    lineHeight: responsive.moderateScale(22),
   },
   submitButton: {
-    marginTop: 24,
-    marginBottom: 16,
+    marginTop: responsive.verticalScale(24),
+    marginBottom: responsive.verticalScale(16),
   },
   backButton: {
-    padding: 16,
+    padding: responsive.moderateScale(16),
     alignItems: "center",
   },
   backText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Medium",
   },
   instructionsContainer: {
     backgroundColor: "rgba(74, 144, 226, 0.1)",
-    borderRadius: 12,
-    padding: 20,
-    marginBottom: 32,
+    borderRadius: responsive.moderateScale(12),
+    padding: responsive.moderateScale(20),
+    marginBottom: responsive.verticalScale(32),
   },
   instructionTitle: {
-    fontSize: 18,
+    fontSize: responsive.moderateScale(16),
     fontFamily: "Poppins-SemiBold",
-    marginBottom: 12,
+    marginBottom: responsive.verticalScale(12),
   },
   instruction: {
-    fontSize: 14,
+    fontSize: responsive.moderateScale(12),
     fontFamily: "Poppins-Regular",
-    lineHeight: 20,
-    marginBottom: 8,
+    lineHeight: responsive.moderateScale(18),
+    marginBottom: responsive.verticalScale(8),
   },
   resendButton: {
-    padding: 12,
+    padding: responsive.moderateScale(12),
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: responsive.verticalScale(8),
   },
   resendText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Medium",
   },
 });

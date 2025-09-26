@@ -18,6 +18,10 @@ import SocialButton from "../socialButton";
 interface SignInWithGoogleProps {
   setLoading: (loading: boolean) => void;
 }
+GoogleSignin.configure({
+  webClientId:
+    "29908299086233123-l8j7en7sqg3b0lmqeb6q80tqvuik54g8.apps.googleusercontent.com",
+});
 
 const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
   const dispatch = useDispatch();
@@ -67,9 +71,7 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
 
       dispatch(setStateKey({ key: "token", value: idToken }));
       dispatch(setStateKey({ key: "userData", value: userData }));
-      
-     
-      
+
       // Navigate to home page after successful authentication
       setTimeout(() => {
         router.replace("/(private)/(tabs)/home");

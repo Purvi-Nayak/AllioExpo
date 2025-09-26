@@ -1,11 +1,11 @@
-import { Dimensions, StyleSheet } from "react-native";
-
-const { width } = Dimensions.get("window");
+import responsive from "@/utils/responsive";
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: responsive.moderateScale(20),
+    ...(responsive.containerStyle(500) as any),
   },
   content: {
     flex: 1,
@@ -14,66 +14,66 @@ export const styles = StyleSheet.create({
   },
   welcomeContainer: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: responsive.verticalScale(40),
   },
   welcomeText: {
-    fontSize: 20,
-    // fontFamily: "Poppins-Regular",
+    fontSize: responsive.moderateScale(18),
+    fontFamily: "Poppins-Regular",
   },
   nameText: {
-    fontSize: 24,
+    fontSize: responsive.moderateScale(20),
     fontFamily: "Poppins-Bold",
-    marginTop: 4,
+    marginTop: responsive.verticalScale(4),
   },
   biometricContainer: {
     alignItems: "center",
-    marginBottom: 60,
+    marginBottom: responsive.verticalScale(60),
   },
   biometricIcon: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: responsive.moderateScale(80),
+    height: responsive.moderateScale(80),
+    borderRadius: responsive.moderateScale(40),
     borderWidth: 3,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: responsive.verticalScale(30),
     backgroundColor: "rgba(255, 206, 27, 0.1)",
   },
   biometricEmoji: {
-    fontSize: 40,
+    fontSize: responsive.moderateScale(32),
   },
   title: {
-    fontSize: 28,
+    fontSize: responsive.moderateScale(28),
     fontFamily: "Poppins-Bold",
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: responsive.verticalScale(12),
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Regular",
     textAlign: "center",
-    paddingHorizontal: 20,
-    lineHeight: 24,
+    paddingHorizontal: responsive.moderateScale(20),
+    lineHeight: responsive.moderateScale(22),
   },
   buttonsContainer: {
     width: "100%",
-    gap: 16,
+    gap: responsive.verticalScale(16),
   },
   retryButton: {
-    paddingVertical: 16,
-    borderRadius: 12,
+    paddingVertical: responsive.verticalScale(16),
+    borderRadius: responsive.moderateScale(12),
     alignItems: "center",
   },
   retryText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-SemiBold",
   },
   mpinButton: {
-    paddingVertical: 16,
+    paddingVertical: responsive.verticalScale(16),
     alignItems: "center",
   },
   mpinText: {
-    fontSize: 16,
+    fontSize: responsive.moderateScale(14),
     fontFamily: "Poppins-Medium",
   },
 });

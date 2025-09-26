@@ -1,13 +1,13 @@
-import React, { memo } from 'react';
+import React, { memo } from "react";
 
-import { useRouter } from 'expo-router';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { useRouter } from "expo-router";
+import { Image, TouchableOpacity, View } from "react-native";
 
-import { ICONS } from '../../../assets';
-import { CustomHeaderLogo, CustomProfileButton } from '../../index';
-import Text from '../Text';
+import { ICONS } from "../../../assets";
+import { CustomHeaderLogo, CustomProfileButton } from "../../index";
+import Text from "../Text";
 
-import useStyle from './style';
+import useStyle from "./style";
 
 interface CustomHeaderProps {
   showBackArrow?: boolean;
@@ -30,11 +30,17 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   const router = useRouter();
 
   const handleBackPress = () => {
-    onBackPress ? onBackPress() : router.back();
+    if (onBackPress) {
+      onBackPress();
+    } else {
+      router.back();
+    }
   };
 
   const handleProfilePress = () => {
-    onProfilePress ? onProfilePress() : () => {};
+    if (onProfilePress) {
+      onProfilePress();
+    }
   };
 
   return (
@@ -56,7 +62,16 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
       )}
 
       <View style={styles.centerContainer}>
-        {title && <Text type="bold" style={styles.title}>{title}</Text>}
+        {title && (
+          <Text
+            type="bold"
+            style={styles.title}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {title}
+          </Text>
+        )}
       </View>
 
       {showProfileLogo && (
