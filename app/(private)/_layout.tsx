@@ -56,19 +56,9 @@
 //     </Tabs>
 //   );
 // }
-import { RootState } from "@/redux/store";
-import { Redirect, Stack } from "expo-router";
-import { useSelector } from "react-redux";
+import { Stack } from "expo-router";
 
 export default function PrivateLayout() {
-  const { isAuthenticated, token } = useSelector(
-    (state: RootState) => state.auth
-  );
-
-  if (!isAuthenticated || !token) {
-    return <Redirect href="/(public)/login" />;
-  }
-
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="auth-entry" />

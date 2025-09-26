@@ -73,78 +73,87 @@
 //     </View>
 //   );
 // }
-import { hydrateAuth, loadAuthData, setAuthChecking } from "@/redux/slices/AuthSlice";
-import { RootState } from "@/redux/store";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "expo-router";
+import { useSelector } from "react-redux";
 
 export default function IndexScreen() {
-  const { 
-    isAuthenticated, 
-    token, 
-    hasSetupSecurity, 
-    authMethod, 
-    isCheckingAuth 
-  } = useSelector((state: RootState) => state.auth);
-  
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasInitialized, setHasInitialized] = useState(false);
-  const router = useRouter();
-  const dispatch = useDispatch();
+  // const { token, hasSetupSecurity, authMethod, isCheckingAuth } = useSelector(
+  //   (state: RootState) => state.auth
+  // );
 
-  useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        // Load auth data from secure storage
-        const authData = await loadAuthData();
-        dispatch(hydrateAuth(authData));
-        
-        // Small delay to ensure smooth transition
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      } catch (error) {
-        console.error("Failed to load auth data:", error);
-      } finally {
-        setIsLoading(false);
-        setHasInitialized(true);
-        dispatch(setAuthChecking(false));
-      }
-    };
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [hasInitialized, setHasInitialized] = useState(false);
 
-    if (!hasInitialized) {
-      initializeAuth();
-    }
-  }, [dispatch, hasInitialized]);
+  // useEffect(() => {
+  //   const initializeAuth = async () => {
+  //     try {
+  //       // Load auth data from secure storage
+  //       const authData = await loadAuthData();
+  //       dispatch(hydrateAuth(authData));
 
-  useEffect(() => {
-    if (!isLoading && !isCheckingAuth && hasInitialized) {
-      
-      if (isAuthenticated && token) {
-        if (hasSetupSecurity && authMethod) {
-          // User has set up security, go to verification screen
-          if (authMethod === "biometric") {
-            router.replace("/(public)/auth-biometric");
-          } else if (authMethod === "mpin") {
-            router.replace("/(public)/auth-mpin");
-          }
-        } else {
-          // User is logged in but hasn't set up security
-          router.replace("/(public)/auth-setup");
-        }
-      } else {
-        // User is not authenticated, go to login
-        router.replace("/(public)/login");
-      }
-    }
-  }, [isAuthenticated, token, hasSetupSecurity, authMethod, isLoading, isCheckingAuth, hasInitialized, router]);
+  //       // Small delay to ensure smooth transition
+  //       await new Promise((resolve) => setTimeout(resolve, 500));
+  //     } catch (error) {
+  //       console.error("Failed to load auth data:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //       setHasInitialized(true);
+  //       dispatch(setAuthChecking(false));
+  //     }
+  //   };
 
+  //   if (!hasInitialized) {
+  //     initializeAuth();
+  //   }
+  // }, [dispatch, hasInitialized]);
+
+  // useEffect(() => {
+  //   if (!isLoading && !isCheckingAuth && hasInitialized) {
+  //     if (isAuthenticated && token) {
+  //       if (hasSetupSecurity && authMethod) {
+  //         // User has set up security, go to verification screen
+  //         if (authMethod === "biometric") {
+  //           router.replace("/(public)/auth-biometric");
+  //         } else if (authMethod === "mpin") {
+  //           router.replace("/(public)/auth-mpin");
+  //         }
+  //       } else {
+  //         // User is logged in but hasn't set up security
+  //         router.replace("/(public)/auth-setup");
+  //       }
+  //     } else {
+  //       // User is not authenticated, go to login
+  //       router.replace("/(public)/login");
+  //     }
+  //   }
+  // }, [
+  //   isAuthenticated,
+  //   token,
+  //   hasSetupSecurity,
+  //   authMethod,
+  //   isLoading,
+  //   isCheckingAuth,
+  //   hasInitialized,
+  //   router,
+  // ]);
+  const data = useSelector((state) => state?.userData);
+
+  return (
+    <>
+      {data?.data?.idToken ? (
+        <Redirect href={"/(private)/(tabs)/home"} />
+      ) : (
+        <Redirect href="/(public)/login" />
+      )}
+    </>
+  );
   // Show loading screen while checking authentication
   // return (
-  //   // <View style={{ 
-  //   //   flex: 1, 
-  //   //   justifyContent: "center", 
+  //   // <View style={{
+  //   //   flex: 1,
+  //   //   justifyContent: "center",
   //   //   alignItems: "center",
-  //   //   backgroundColor: "#FFCE1B" 
+  //   //   backgroundColor: "#FFCE1B"
   //   // }}>
   //   //   <ActivityIndicator size="large" color="#000" />
   //   // </View>
