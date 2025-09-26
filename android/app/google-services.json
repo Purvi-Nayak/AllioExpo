@@ -54,11 +54,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "299086233123-mgqtcs614hd0e5rlcnplt2d46d68rat1.apps.googleusercontent.com",
+          "client_id": "299086233123-3f8nq43kfcntkmig6v4tn6dcfgvjeuo5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.allioexpo",
             "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "299086233123-l8j7en7sqg3b0lmqeb6q80tqvuik54g8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.allioexpo",
+            "certificate_hash": "c66e75a2fd98b2b381c2a8cb73743d2f22926e10"
           }
         },
         {
