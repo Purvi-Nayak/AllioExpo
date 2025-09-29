@@ -1,11 +1,11 @@
-import { API_URL } from '@/utils/constant';
-import { showError } from '@/utils/toastConfig';
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { API_URL } from "@/utils/constant";
+import { showError } from "@/utils/toastConfig";
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -13,7 +13,7 @@ api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     return config;
   },
-  error => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -21,17 +21,17 @@ api.interceptors.response.use(
     return response;
   },
 
-  error => {
+  (error) => {
     const status = error?.response?.status;
     const errorData = error?.response?.data;
     if (status >= 400 && status < 410) {
       showError(errorData?.error);
     } else {
-      showError('Something went wrong');
+      showError("Something went wrong");
     }
 
     return error;
-  },
+  }
 );
 
 interface ClientParams {
@@ -43,7 +43,7 @@ interface ClientParams {
 }
 
 const client = ({
-  method = 'get',
+  method = "get",
   url,
   data,
   headers = {},
@@ -57,6 +57,5 @@ const client = ({
     ...otherParams,
   });
 };
-
 
 export default client;

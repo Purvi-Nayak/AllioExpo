@@ -63,6 +63,7 @@ export default function PrivateLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="auth-entry" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="/profile" />
     </Stack>
   );
 }

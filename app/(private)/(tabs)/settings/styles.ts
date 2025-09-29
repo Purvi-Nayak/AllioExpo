@@ -1,6 +1,6 @@
-import { useTheme } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
-import { FONTS } from '../../../../assets';
+import { useTheme } from "@react-navigation/native";
+import { StyleSheet } from "react-native";
+import { FONTS } from "../../../../assets";
 
 const useStyle = () => {
   const { colors } = useTheme();
@@ -8,17 +8,13 @@ const useStyle = () => {
     container: {
       flex: 1,
       backgroundColor: colors.background,
-      justifyContent: 'center',
-      alignItems: 'center',
     },
     title: {
       fontSize: 18,
       color: colors.error,
-      fontFamily:FONTS.light
+      fontFamily: FONTS.light,
     },
   });
 };
 
 export default useStyle;
-
-
