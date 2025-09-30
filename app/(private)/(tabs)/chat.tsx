@@ -115,15 +115,19 @@ export default function Chat() {
       verticalPercent = -percentX; // invert to keep intuitive up/down
     }
 
+    // Swap up/down semantics: treat native 'up' as 'down' and vice-versa
+    const effectiveSideY =
+      sideY === "up" ? "down" : sideY === "down" ? "up" : sideY;
+
     // Ensure we respect the direction determined by native side as a safety check
     // If native says sideX is left but percent is positive, flip sign
     if (sideX === "left" && horizontalPercent > 0)
       horizontalPercent = -Math.abs(horizontalPercent);
     if (sideX === "right" && horizontalPercent < 0)
       horizontalPercent = Math.abs(horizontalPercent);
-    if (sideY === "up" && verticalPercent > 0)
+    if (effectiveSideY === "up" && verticalPercent > 0)
       verticalPercent = -Math.abs(verticalPercent);
-    if (sideY === "down" && verticalPercent < 0)
+    if (effectiveSideY === "down" && verticalPercent < 0)
       verticalPercent = Math.abs(verticalPercent);
 
     // map percent (-100..100) to pixel offsets and clamp to stage bounds
@@ -158,18 +162,13 @@ export default function Chat() {
       return; // skip animation to avoid tiny movements
     }
 
-    Animated.parallel([
-      Animated.timing(animXY, {
-        toValue: { x: targetX, y: targetY },
-        duration: 120,
-        useNativeDriver: true,
-      }),
-      // Animated.timing(animRotate, {
-      //   toValue: rollDeg || 0,
-      //   duration: 120,
-      //   useNativeDriver: true,
-      // }),
-    ]).start();
+    // Use spring for smoother, natural motion and to reach edge reliably
+    Animated.spring(animXY, {
+      toValue: { x: targetX, y: targetY },
+      friction: 7,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
   }, [
     percentX,
     percentY,
