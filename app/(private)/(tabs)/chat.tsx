@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Button,
   DeviceEventEmitter,
   Dimensions,
+  Image,
   NativeModules,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
+import { IMAGES } from "../../../assets";
 
 const { RotationSensor } = NativeModules as any;
 
@@ -32,7 +32,9 @@ function useRotation({ maxAngle = 30, interval = 50 } = {}) {
       ) {
         RotationSensor.startListening(maxAngle, interval);
       }
-    } catch (_e) {}
+    } catch {
+      // ignore
+    }
 
     const sub = DeviceEventEmitter.addListener("RotationChanged", (e: any) => {
       if (!e) return;
@@ -61,7 +63,9 @@ function useRotation({ maxAngle = 30, interval = 50 } = {}) {
         ) {
           RotationSensor.stopListening();
         }
-      } catch (_e) {}
+      } catch {
+        // ignore
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -71,29 +75,27 @@ function useRotation({ maxAngle = 30, interval = 50 } = {}) {
 
 export default function Chat() {
   const { width, height } = Dimensions.get("window");
-  const boxSize = 120;
-  // safe margins to keep box fully visible and leave space for controls/info
-  const topMargin = 100; // space for top controls/status
-  const bottomMargin = 140; // space for bottom info
-  const leftMargin = 20;
-  const rightMargin = 20;
+  // Match the animated container to actual car image size so edge math is correct
+  const boxSize = 70;
+  // Vertical safe margins only (leave space top/bottom). No horizontal margins so car can touch edges.
+  const topMargin = height * 0.06; // space for top controls/status
+  const bottomMargin = height * 0.02; // space for bottom info
 
   // compute maximum translation from screen center while ensuring box edges stay inside screen
-  const maxOffsetX = Math.max(
-    0,
-    (width - boxSize - leftMargin - rightMargin) / 2
-  );
+  // Horizontal: allow car to travel so its left edge hits 0 and right edge hits screen width - boxSize
+  const maxOffsetX = Math.max(0, (width - boxSize) / 2);
   // do not subtract extra offset here — compute symmetric available area from center
   const maxOffsetY = Math.max(
     0,
     (height - boxSize - topMargin - bottomMargin) / 2
   );
 
+  // Start centered (0,0) relative to screen center; we'll position box absolutely at center manually
   const animXY = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-  const animRotate = useRef(new Animated.Value(0)).current;
-  const [enabled, setEnabled] = useState(true);
+  // (Removed unused enabled state that previously toggled sensor listening)
 
-  const { percentX, percentY, rollDeg, pitchDeg, sideX, sideY } = useRotation({
+  // No rotation needed now; only track translation related values
+  const { percentX, percentY, sideX, sideY } = useRotation({
     maxAngle: 30,
     interval: 50,
   });
@@ -172,9 +174,7 @@ export default function Chat() {
   }, [
     percentX,
     percentY,
-    rollDeg,
     animXY,
-    animRotate,
     maxOffsetX,
     maxOffsetY,
     width,
@@ -183,41 +183,9 @@ export default function Chat() {
     sideY,
   ]);
 
-  // Rotation smoothing: wrap-safe shortest-angle delta, deadzone and exponential smoothing
-  const smoothedRollRef = useRef<number>(0);
-  useEffect(() => {
-    const RAW = rollDeg || 0;
-    const current = (animRotate as any).__getValue
-      ? (animRotate as any).__getValue()
-      : smoothedRollRef.current || 0;
-
-    // compute shortest angular difference between RAW and current (degrees)
-    let delta = ((RAW - current + 180) % 360) - 180;
-
-    // deadzone: ignore tiny angle changes
-    const ROT_DEADZONE = 3; // degrees
-    if (Math.abs(delta) <= ROT_DEADZONE) return;
-
-    // smoothing factor (0..1). Lower -> smoother/slower
-    const ALPHA = 0.18;
-    const next = current + delta * ALPHA;
-    smoothedRollRef.current = next;
-
-    Animated.timing(animRotate, {
-      toValue: next,
-      duration: 120,
-      useNativeDriver: true,
-    }).start();
-  }, [rollDeg, animRotate]);
-
-  const rotateInterpolate = animRotate.interpolate({
-    inputRange: [-180, 180],
-    outputRange: ["-180deg", "180deg"],
-  });
-
   return (
     <View style={styles.container}>
-      <View style={styles.controls}>
+      {/* <View style={styles.controls}>
         <Button
           title={enabled ? "Stop" : "Start"}
           onPress={() => {
@@ -238,15 +206,13 @@ export default function Chat() {
             });
           }}
         />
-      </View>
+      </View> */}
 
       {/* Stage positioned inside safe margins so translations keep the box visible */}
       <View
         style={[
           styles.stage,
           {
-            left: leftMargin,
-            right: rightMargin,
             top: topMargin,
             bottom: bottomMargin,
           },
@@ -257,32 +223,35 @@ export default function Chat() {
           style={[
             styles.box,
             {
-              transform: [
-                { translateX: animXY.x },
-                { translateY: animXY.y },
-                { rotate: rotateInterpolate },
-              ],
+              transform: [{ translateX: animXY.x }, { translateY: animXY.y }],
             },
           ]}
-        />
+        >
+          <Image
+            source={IMAGES.car}
+            style={styles.carImage}
+            resizeMode="contain"
+          />
+        </Animated.View>
       </View>
 
-      <View style={styles.info}>
+      {/* <View style={styles.info}>
         <Text>percentX: {percentX.toFixed(1)}%</Text>
         <Text>percentY: {percentY.toFixed(1)}%</Text>
         <Text>sideX: {sideX}</Text>
         <Text>sideY: {sideY}</Text>
         <Text>roll: {rollDeg.toFixed(1)}°</Text>
         <Text>pitch: {pitchDeg.toFixed(1)}°</Text>
-      </View>
+      </View> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   // stretch full screen; stage will be absolutely positioned inside safe margins
+
   container: { flex: 1 },
-  controls: { position: "absolute", top: 40, right: 20 },
+  // controls: { position: "absolute", top: 40, right: 20 },
   // stage is absolutely positioned within safe margins provided dynamically
   stage: {
     position: "absolute",
@@ -291,12 +260,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   box: {
-    width: 120,
-    height: 120,
-    backgroundColor: "#007aff",
-    borderRadius: 8,
-    zIndex: 10,
-    elevation: 10,
+    width: 70,
+    height: 70,
   },
-  info: { position: "absolute", bottom: 40, alignItems: "center" },
+  carImage: {
+    width: 70,
+    height: 70,
+  },
+  // info: { position: "absolute", bottom: 40, alignItems: "center" },
 });
