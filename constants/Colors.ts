@@ -28,6 +28,7 @@ export const colors = {
   green: "#4CAF50",
   modelbg: "#0000004d",
   mainone: "rgba(0,0,0,0.5)",
+  accepted: "#C8E6C9",
 };
 
 /**
@@ -67,6 +68,7 @@ const baseTheme = {
   green: "#4CAF50",
   modelbg: "#0000004d",
   mainone: "rgba(0,0,0,0.5)",
+  accepted: "#C8E6C9",
 };
 
 export const Themes = {
@@ -111,6 +113,7 @@ export const Themes = {
     green: "#4CAF50",
     modelbg: "#0000004d",
     mainone: "rgba(0,0,0,0.5)",
+    accepted: "#C8E6C9",
   },
 };
 

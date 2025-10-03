@@ -110,5 +110,5 @@ export const IMAGES = {
   Favicon: require("./images/favicon.png"),
   SplashIcon: require("./images/splash-icon.png"),
   Icon: require("./images/icon.png"),
-  car:require("./images/car.png"),
+  Nodata: require('./images/Nodata.png'),
 };
