@@ -94,7 +94,6 @@ export const ICONS = {
   Attach: require("./icons/attach.png"),
   gemini: require("./icons/Geminiai.png"),
   Edit: require("./icons/edit.png"),
-  // Additional icons added
   studio: require("./icons/studio.png"),
   send: require("./icons/send.png"),
 };
@@ -106,10 +105,10 @@ export const IMAGES = {
   Allio_Logo: require("./images/Allio_logo.png"),
   Mobile: require("./images/mobile.png"),
   Notification: require("./images/notification.jpg"),
-  // Additional images added
   AdaptiveIcon: require("./images/adaptive-icon.png"),
   Favicon: require("./images/favicon.png"),
   SplashIcon: require("./images/splash-icon.png"),
   Icon: require("./images/icon.png"),
   car: require("./images/car.png"),
+  Nodata: require("./images/Nodata.png"),
 };

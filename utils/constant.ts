@@ -1,7 +1,7 @@
-import { IMAGES } from '../assets';
-import { Environment } from './environment';
+import { IMAGES } from "../assets";
+import { Environment } from "./environment";
 
-import { width } from './helper';
+import { width } from "./helper";
 interface OnboardingItem {
   id: string;
   image: any;
@@ -15,87 +15,94 @@ const WEB_CLIENT_ID = Environment.GOOGLE_WEB_CLIENT_ID;
 const CARD_WIDTH = width * 0.94;
 const SPACING = (width - CARD_WIDTH) / 0.6;
 
-const API_URL = 'https://allio-app-bxwta.ondigitalocean.app/api';
+const API_URL = "https://allio-app-bxwta.ondigitalocean.app/api";
 
 // Use environment-based API URL instead of hardcoded
 const BASE_URL = Environment.API_BASE_URL;
 
 const onboardingData: OnboardingItem[] = [
   {
-    id: '1',
+    id: "1",
     image: IMAGES.First,
-    title: 'Smart Tools, One App',
+    title: "Smart Tools, One App",
     description:
-      'From QR scanning to social login, access all smart tools in one place.',
+      "From QR scanning to social login, access all smart tools in one place.",
   },
   {
-    id: '2',
+    id: "2",
     image: IMAGES.SecondOnboarding,
-    title: 'Secure & Private',
+    title: "Secure & Private",
     description:
-      'Biometrics, PIN lock, and encrypted messaging for ultimate security.',
+      "Biometrics, PIN lock, and encrypted messaging for ultimate security.",
   },
   {
-    id: '3',
+    id: "3",
     image: IMAGES.OnboardingThree,
-    title: 'Smarter Media',
+    title: "Smarter Media",
     description:
-      'Capture, edit, and share videos or photos with advanced tools.',
+      "Capture, edit, and share videos or photos with advanced tools.",
   },
   {
-    id: '4',
+    id: "4",
     image: IMAGES.First,
-    title: 'Real-Time & Background Features',
+    title: "Real-Time & Background Features",
     description:
-      'Enable push notifications, background tasks, and live tracking.',
+      "Enable push notifications, background tasks, and live tracking.",
   },
   {
-    id: '5',
+    id: "5",
     image: IMAGES.SecondOnboarding,
-    title: 'Multi-language + Voice Assistant',
+    title: "Multi-language + Voice Assistant",
     description:
-      'Speak to control, read text aloud, and use your app in any language.',
+      "Speak to control, read text aloud, and use your app in any language.",
   },
 ];
 
-
-
-
+export const HOME = {
+  ChatDetails: "chatdetails",
+  Profile: "profile",
+  HomeTabs: "(tabs)",
+};
+export const THRESHOLD = 50;
 
 const LICENSE_KEY =
-  'z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v';
+  "z_9lMDUqcUwlNkjjU52ZLFQbwBvxJ60uSd_ouvwBDRCKtmK5fbZAtHFd3889zr9v";
 
-  const FeaturesDataItem = [
-    {
-      image: IMAGES.Notification,
-      title: ' ScanQR',
-      description: 'Scan documents quickly and save them securely.',
-      buttonText: 'ScanQR',
-    },
-    {
-      image: IMAGES.Notification,
-      title: 'Video Editing',
-      description: 'Stay updated with instant alerts and reminders.',
-      buttonText: 'Video Editing',
-    },
-    {
-      image: IMAGES.Notification,
-      title: 'Photo Editing',
-      description: 'Scan QR codes and barcodes with ease.',
-      buttonText: 'Photo Editing',
-    },
-  
-    {
-      image: IMAGES.Notification,
-      title: 'Home',
-      description: 'Fast and reliable scanning for all your needs.',
-      buttonText: 'Home',
-    },
-  ];
+const FeaturesDataItem = [
+  {
+    image: IMAGES.Notification,
+    title: " ScanQR",
+    description: "Scan documents quickly and save them securely.",
+    buttonText: "ScanQR",
+  },
+  {
+    image: IMAGES.Notification,
+    title: "Video Editing",
+    description: "Stay updated with instant alerts and reminders.",
+    buttonText: "Video Editing",
+  },
+  {
+    image: IMAGES.Notification,
+    title: "Photo Editing",
+    description: "Scan QR codes and barcodes with ease.",
+    buttonText: "Photo Editing",
+  },
+
+  {
+    image: IMAGES.Notification,
+    title: "Home",
+    description: "Fast and reliable scanning for all your needs.",
+    buttonText: "Home",
+  },
+];
 
 export {
   API_URL,
-  BASE_URL, CARD_WIDTH, FeaturesDataItem,
-  LICENSE_KEY, onboardingData, SPACING, WEB_CLIENT_ID
+  BASE_URL,
+  CARD_WIDTH,
+  FeaturesDataItem,
+  LICENSE_KEY,
+  onboardingData,
+  SPACING,
+  WEB_CLIENT_ID,
 };
-
