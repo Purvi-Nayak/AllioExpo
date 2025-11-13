@@ -22,7 +22,6 @@ const useStyle = () => {
       borderColor: colors.text,
       borderRadius: responsive.moderateScale(10),
       backgroundColor: colors.background,
-      height: responsive.layout.inputHeight, // Use consistent height from responsive system
       paddingHorizontal: responsive.moderateScale(10),
     },
     inputContainerFocused: {
@@ -46,10 +45,16 @@ const useStyle = () => {
         Platform.OS === "ios"
           ? responsive.verticalScale(12)
           : responsive.verticalScale(8),
+      ...(responsive.isWeb && {
+        outlineWidth: 0,
+        outlineColor: "transparent",
+        outlineStyle: "none",
+      }),
     },
     textInputMultiline: {
       paddingTop: responsive.verticalScale(12),
       textAlignVertical: "top",
+      maxHeight: responsive.verticalScale(120), // Limit max height for multiline
     },
     passwordToggle: {
       padding: responsive.moderateScale(12),

@@ -1,0 +1,176 @@
+import api from "@/api";
+import { WORD_COUNT_THRESHOLD } from "@/utils/constant";
+import { useEffect, useRef, useState } from "react";
+import { Clipboard, Platform } from "react-native";
+
+interface Message {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+  fullText?: string;
+}
+
+const useAiAssistant = () => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputText, setInputText] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [showPrintOption, setShowPrintOption] = useState<string | null>(null);
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const flatListRef = useRef<any>(null);
+  const typingIntervalRef = useRef<any>(null);
+
+  const states = {
+    messages,
+    setMessages,
+    inputText,
+    setInputText,
+    isLoading,
+    setIsLoading,
+    typingMessageId,
+    setTypingMessageId,
+    showPrintOption,
+    setShowPrintOption,
+    copiedMessageId,
+    setCopiedMessageId,
+  };
+
+  const clearTypingInterval = () => {
+    if (typingIntervalRef.current) {
+      clearTimeout(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+  };
+
+  const scrollToBottom = () => {
+    // Faster scroll with shorter delay
+    setTimeout(() => {
+      flatListRef.current?.scrollToEnd({ animated: true });
+    }, 30);
+  };
+
+  const typeWriterEffect = (fullText: string, messageId: string) => {
+    clearTypingInterval();
+    const wordCount = fullText.trim().split(/\s+/).length;
+    if (wordCount > WORD_COUNT_THRESHOLD) {
+      setShowPrintOption(messageId);
+    }
+
+    let currentText = "";
+    let currentIndex = 0;
+
+    const typeNextChar = () => {
+      if (currentIndex < fullText.length) {
+        currentText += fullText[currentIndex];
+        currentIndex++;
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === messageId ? { ...msg, text: currentText } : msg
+          )
+        );
+        // Auto-scroll while typing with faster animation
+        if (currentIndex % 10 === 0) {
+          // Scroll every 10 characters
+          setTimeout(
+            () => flatListRef.current?.scrollToEnd({ animated: true }),
+            10
+          );
+        }
+        typingIntervalRef.current = setTimeout(typeNextChar, 15); // Faster typing (15ms instead of 20ms)
+      } else {
+        setTypingMessageId(null);
+        setShowPrintOption(null);
+        clearTypingInterval();
+      }
+    };
+
+    typeNextChar();
+  };
+
+  const sendMessage = async () => {
+    if (!inputText.trim() || isLoading) return;
+    clearTypingInterval();
+
+    const userMessage = {
+      id: Date.now().toString(),
+      text: inputText.trim(),
+      isUser: true,
+      timestamp: new Date(),
+    } as Message;
+
+    setMessages((prev) => [...prev, userMessage]);
+    const messageToSend = inputText.trim();
+    setInputText("");
+    setIsLoading(true);
+
+    setTimeout(() => scrollToBottom(), 50); // Faster initial scroll
+
+    try {
+      const response = await api.AI.getAiResponse({
+        data: { prompt: messageToSend },
+      });
+      const aiResponseText = response?.data?.data?.reply ?? "";
+      const aiMessageId = (Date.now() + 1).toString();
+      const aiMessage = {
+        id: aiMessageId,
+        text: "",
+        isUser: false,
+        timestamp: new Date(),
+        fullText: aiResponseText,
+      } as Message;
+
+      setMessages((prev) => [...prev, aiMessage]);
+      setIsLoading(false);
+      setTypingMessageId(aiMessageId);
+      setTimeout(() => typeWriterEffect(aiResponseText, aiMessageId), 300);
+    } catch (error) {
+      console.error("AI Response Error:", error);
+      setIsLoading(false);
+      setTypingMessageId(null);
+    }
+  };
+
+  const printFullMessage = (messageId: string) => {
+    clearTypingInterval();
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === messageId ? { ...msg, text: msg.fullText } : msg
+      )
+    );
+    setTypingMessageId(null);
+    setShowPrintOption(null);
+    setTimeout(() => scrollToBottom(), 50);
+  };
+
+  const stopTyping = () => {
+    clearTypingInterval();
+    setTypingMessageId(null);
+    setShowPrintOption(null);
+  };
+
+  const handleCopy = (text: string, messageId: string) => {
+    if (Platform.OS === "web") {
+      void navigator.clipboard.writeText(text);
+    } else {
+      Clipboard.setString(text);
+    }
+    setCopiedMessageId(messageId);
+    setTimeout(() => setCopiedMessageId(null), 2000);
+  };
+
+  useEffect(() => {
+    return () => clearTypingInterval();
+  }, []);
+
+  return {
+    states,
+    flatListRef,
+    sendMessage,
+    printFullMessage,
+    stopTyping,
+    handleCopy,
+  };
+};
+
+export default useAiAssistant;

@@ -154,6 +154,8 @@ interface InputProps {
   inputStyle?: any;
   labelStyle?: any;
   errorStyle?: any;
+  // Additional props
+  [key: string]: any;
 }
 
 const Input: React.FC<InputProps> = ({

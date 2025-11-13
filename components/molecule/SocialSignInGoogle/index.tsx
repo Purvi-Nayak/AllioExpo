@@ -92,6 +92,8 @@ const SignInWithGoogle: React.FC<SignInWithGoogleProps> = ({ setLoading }) => {
       const { idToken } = await GoogleSignin.getTokens();
       if (!idToken) throw new Error("ID token is missing");
 
+      console.log("idToken>", idToken);
+
       const credential = GoogleAuthProvider.credential(idToken);
       const authInstance = getAuth();
       const result = await signInWithCredential(authInstance, credential);

@@ -38,6 +38,15 @@ const api = {
         data,
       }),
   },
+
+  AI: {
+    getAiResponse: ({ data }: { data: { prompt: string } }) =>
+      client({
+        method: "post",
+        url: "/ai/gemini",
+        data,
+      }),
+  },
 };
 
 export default api;

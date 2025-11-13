@@ -1,5 +1,6 @@
 import { Container } from "@/components";
 import CustomFlatList from "@/components/atoms/FlatList";
+import responsive from "@/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -151,7 +152,7 @@ export default function ProfileScreen() {
               renderItem={({ item }: { item: any }) => (
                 <Image source={{ uri: item }} style={styles.mediaItem} />
               )}
-              numColumns={2}
+              numColumns={responsive.isWeb ? 3 : 2}
               columnWrapperStyle={styles.gridRow}
               contentContainerStyle={styles.gridContent}
               ListEmptyComponent={

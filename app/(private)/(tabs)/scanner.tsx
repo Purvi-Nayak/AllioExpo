@@ -14,6 +14,7 @@ import {
 
 import { Overlay } from "@/components/Overlay";
 import { showError } from "@/utils/toastConfig";
+import { useRouter } from "expo-router";
 
 const ALLOWED_EXTS = ["png", "jpg", "jpeg", "webp", "gif", "bmp"];
 const QR_API_URL = "https://api.qrserver.com/v1/read-qr-code/";
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   const [requesting, setRequesting] = useState(false);
   const qrLock = useRef(false);
   const appState = useRef(AppState.currentState);
+  const router = useRouter();
 
   // Reset lock when app resumes
   useEffect(() => {
@@ -50,17 +52,31 @@ export default function HomeScreen() {
     }
   }, [permission, requestPermission, isWeb]);
 
-  const openDecodedUrl = (decoded: string) => {
+  // helper to validate simple email
+  const isEmail = (value: string) =>
+    typeof value === "string" &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+
+  const handleDecodedResult = async (decoded: string | null) => {
     if (!decoded) {
       showError("No data found in QR code");
       return;
     }
 
+    if (isEmail(decoded)) {
+      router.push({
+        pathname: "/(private)/profile",
+        params: { userEmail: decoded },
+      });
+      return;
+    }
+
+    // fallback: open as external link
     if (Platform.OS === "web" && typeof window !== "undefined") {
       window.open(decoded, "_blank", "noopener,noreferrer");
     } else {
       Linking.openURL(decoded).catch(() =>
-        showError(decoded || "Could not open link")
+        showError("Could not open link: " + decoded)
       );
     }
   };
@@ -120,7 +136,7 @@ export default function HomeScreen() {
         showError("No QR code found in the selected image.");
         return;
       }
-      await openDecodedUrl(decoded);
+      await handleDecodedResult(decoded);
     } catch (err) {
       console.error(err);
       showError("There was an error processing the image. Please try again.");
@@ -212,7 +228,7 @@ export default function HomeScreen() {
         onBarcodeScanned={({ data }) => {
           if (data && !qrLock.current) {
             qrLock.current = true;
-            setTimeout(() => openDecodedUrl(data), 500);
+            setTimeout(() => handleDecodedResult(data), 500);
           }
         }}
       />

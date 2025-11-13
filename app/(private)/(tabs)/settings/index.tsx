@@ -75,9 +75,14 @@ function SettingsScreen() {
     });
   }, [router, userEmail]);
 
+  const goToAi = () => {
+    router.push("/(private)/aiAssistant");
+  };
+
   const DATA = [
     { id: "profile", title: "Profile", action: goToProfile },
     { id: "logout", title: "Logout", action: handleLogout },
+    { id: "ai", title: "AI Assistance", action: goToAi },
   ];
 
   const renderItem = ({ item }: { item: (typeof DATA)[number] }) => (

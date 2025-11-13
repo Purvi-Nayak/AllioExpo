@@ -1,146 +1,218 @@
-import { useTheme } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import { useTheme } from "@/constants/Colors";
+import responsive from "@/utils/responsive";
+import { Platform, StyleSheet } from "react-native";
 
 const useStyle = () => {
-  const { colors } = useTheme();
+  const colors = useTheme();
+
+  // avatar size responsive to device
+  const avatarSize = responsive.scale(
+    responsive.isDesktop ? 110 : responsive.isTablet ? 96 : 88
+  );
+
+  // media item sizing per breakpoint
+  const mediaItemWidth = responsive.isDesktop
+    ? "31%"
+    : responsive.isTablet
+    ? "47%"
+    : "48%";
+  const mediaItemHeight = responsive.verticalScale(
+    responsive.isDesktop ? 220 : 180
+  );
+
+  // container center on web with max width
+  // Increase web max width and reduce large side gutters so content is wider on desktop
+  // Use same web width as AI Assistant for consistent layout
+  const webContainer = responsive.isWeb
+    ? {
+        ...responsive.containerStyle(1000),
+        paddingHorizontal: responsive.isDesktop
+          ? responsive.spacing.lg()
+          : responsive.spacing.md(),
+      }
+    : {};
+
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
+      backgroundColor: colors.background ?? colors.white,
+      ...webContainer,
     },
+
     profileHeaderContainer: {
-      paddingHorizontal: 16,
-      paddingVertical: 16,
+      paddingHorizontal: responsive.isWeb
+        ? responsive.spacing.lg()
+        : responsive.spacing.md(),
+      paddingVertical: responsive.spacing.md(),
       backgroundColor: colors.background,
       borderBottomWidth: 1,
-      borderBottomColor: colors.border,
+      borderBottomColor: colors.black,
     },
+
     topSectionContainer: {
       flexDirection: "row",
       alignItems: "center",
     },
+
     profileImageContainer: {
       position: "relative",
     },
+
     profileImage: {
-      width: 88,
-      height: 88,
-      borderRadius: 44,
-      borderWidth: 3,
+      width: avatarSize,
+      height: avatarSize,
+      borderRadius: avatarSize / 2,
+      borderWidth: responsive.isWeb ? 4 : 3,
       borderColor: colors.primary,
     },
+
     onlineIndicator: {
       position: "absolute",
-      bottom: 6,
-      right: 6,
-      width: 16,
-      height: 16,
-      borderRadius: 8,
-      backgroundColor: colors.green || "#00FF00",
+      bottom: responsive.scale(6),
+      right: responsive.scale(6),
+      width: responsive.scale(16),
+      height: responsive.scale(16),
+      borderRadius: responsive.scale(8),
+      backgroundColor: colors.green,
       borderWidth: 2,
-      borderColor: colors.card,
+      borderColor: colors.white,
     },
+
     nameAndStatsContainer: {
       flex: 1,
-      marginLeft: 12,
+      marginLeft: responsive.spacing.sm(),
     },
+
     profileStats: {
       flexDirection: "row",
-      justifyContent: "space-evenly",
+      justifyContent: "space-between",
       alignItems: "center",
       width: "100%",
+      marginTop: responsive.spacing.sm(),
     },
+
     statItem: {
       alignItems: "center",
+      paddingHorizontal: responsive.spacing.sm(),
     },
+
     statSeparator: {
       width: 1.5,
-      height: 30,
+      height: responsive.verticalScale(30),
       backgroundColor: colors.primary,
+      marginHorizontal: responsive.spacing.sm(),
     },
+
     statNumber: {
-      fontSize: 18,
+      fontSize: responsive.typography.subtitle(),
       color: colors.primary,
     },
+
     statLabel: {
-      fontSize: 14,
+      fontSize: responsive.typography.body(),
       color: colors.text,
-      marginTop: 4,
+      marginTop: responsive.spacing.xs(),
     },
+
     profileInfoContainer: {
       alignItems: "flex-start",
-      marginTop: 8,
+      marginTop: responsive.spacing.sm(),
     },
+
     displayName: {
-      fontSize: 18,
+      fontSize: responsive.typography.title(),
       color: colors.text,
     },
+
     email: {
-      fontSize: 14,
+      fontSize: responsive.typography.body(),
       color: colors.text,
       opacity: 0.8,
     },
+
     mobileNo: {
-      fontSize: 13,
+      fontSize: responsive.typography.caption(),
       color: colors.text,
       opacity: 0.7,
     },
+
     actionButton: {
-      backgroundColor: colors.card,
       borderWidth: 1,
-      borderColor: colors.border,
       borderRadius: 8,
-      paddingVertical: 8,
+      paddingVertical: responsive.spacing.sm(),
+      paddingHorizontal: responsive.spacing.lg(),
       alignItems: "center",
       justifyContent: "center",
     },
+
     actionButtonText: {
       color: colors.text,
-      fontSize: 14,
+      fontSize: responsive.typography.body(),
     },
+
     contentHeader: {
       flexDirection: "row",
       justifyContent: "space-around",
+      paddingHorizontal: responsive.spacing.md(),
+      marginTop: responsive.spacing.md(),
     },
+
     tab: {
       width: "35%",
-      paddingVertical: 10,
+      paddingVertical: responsive.spacing.sm(),
       alignItems: "center",
     },
+
     activeTab: {
       borderBottomWidth: 2,
       borderBottomColor: colors.primary,
     },
+
     tabText: {
-      fontSize: 16,
+      fontSize: responsive.typography.body(),
       color: colors.text,
     },
+
     activeTabText: {
       color: colors.primary,
     },
+
     contentContainer: {
       flex: 1,
-      padding: 12,
+      padding: responsive.spacing.md(),
+      width: "100%",
     },
+
     gridContent: {
       flexGrow: 1,
+      marginTop: responsive.spacing.md(),
+      paddingBottom:
+        Platform.OS === "web"
+          ? responsive.spacing.lg()
+          : responsive.spacing.xl(),
     },
+
     gridRow: {
-      justifyContent: "space-between",
+      gap: responsive.spacing.sm(),
     },
+
     mediaItem: {
-      width: "45%",
-      height: 180,
+      width: mediaItemWidth,
+      height: mediaItemHeight,
       borderRadius: 8,
+      marginBottom: responsive.spacing.md(),
+      backgroundColor: colors.lightgray,
     },
+
     emptyContainer: {
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      paddingVertical: 40,
+      paddingVertical: responsive.spacing.xl(),
     },
+
     emptyText: {
-      fontSize: 18,
+      fontSize: responsive.typography.title(),
       color: colors.text,
       opacity: 0.7,
     },

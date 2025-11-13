@@ -96,6 +96,7 @@ export const ICONS = {
   Edit: require("./icons/edit.png"),
   // Additional icons added
   studio: require("./icons/studio.png"),
+  send: require("./icons/send.png"),
 };
 
 export const IMAGES = {
@@ -110,5 +111,5 @@ export const IMAGES = {
   Favicon: require("./images/favicon.png"),
   SplashIcon: require("./images/splash-icon.png"),
   Icon: require("./images/icon.png"),
-  car:require("./images/car.png"),
+  car: require("./images/car.png"),
 };
